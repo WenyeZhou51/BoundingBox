@@ -11,15 +11,27 @@ extends CharacterBody3D
 @onready var black_screen: ColorRect = $UIOverlay/BlackScreen
 @onready var bounding_box_container: Control = $UIOverlay/BoundingBoxContainer
 
+# Reference to the intro sequence
+var intro_sequence: Control
+var game_started: bool = false
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var vision_mode: bool = false
 var detected_objects: Array[BasePrefab] = []
 var interactable_objects_in_range: Array[BasePrefab] = []
 
+# Confidence fluctuation system
+var confidence_fluctuations: Dictionary = {}  # Store fluctuations for each object
+var fluctuation_timer: float = 0.0
+var fluctuation_update_interval: float = 1.0  # Update every second
+
 func _ready():
-	# Capture the mouse cursor
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# Add player to group for easy finding by other scripts
+	add_to_group("player")
+	
+	# Don't capture mouse cursor initially - wait for intro to complete
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 	# Find all BasePrefab objects in the scene
 	find_all_prefabs()
@@ -27,8 +39,30 @@ func _ready():
 	# Initialize UI
 	black_screen.visible = false
 	bounding_box_container.visible = false
+	
+	# Find and connect to intro sequence (now inside the SubViewport)
+	intro_sequence = get_node("../IntroSequence")
+	if intro_sequence:
+		intro_sequence.intro_complete.connect(_on_intro_complete)
+	else:
+		# If no intro sequence found, start game immediately
+		_on_intro_complete()
+
+func _on_intro_complete():
+	game_started = true
+	# Now capture the mouse cursor and enable bounding box vision mode
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# Start in bounding box vision mode as requested
+	vision_mode = true
+	black_screen.visible = true
+	bounding_box_container.visible = true
+	update_bounding_boxes()
 
 func _input(event):
+	# Don't handle input until game has started
+	if not game_started:
+		return
+		
 	# Handle mouse look
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * sensitivity)
@@ -52,6 +86,10 @@ func _input(event):
 			handle_interaction()
 
 func _physics_process(delta):
+	# Don't handle physics until game has started
+	if not game_started:
+		return
+		
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -85,6 +123,27 @@ func _physics_process(delta):
 
 	move_and_slide()
 	
+	# Push RigidBody3D objects when colliding with them
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
+		if collider is RigidBody3D:
+			# Apply a gentler push force that doesn't cause excessive bouncing
+			var push_direction = -collision.get_normal()
+			# Scale the force based on the object's mass to prevent light objects from bouncing the player
+			var object_mass = collider.mass if collider.mass > 0 else 1.0
+			# Use a more controlled force calculation
+			var push_force = push_direction * speed * min(object_mass, 1.0) * 0.5
+			# Apply the impulse at the contact point
+			var contact_point = collision.get_position() - collider.global_position
+			collider.apply_impulse(push_force, contact_point)
+	
+	# Update confidence fluctuations timer
+	fluctuation_timer += delta
+	if fluctuation_timer >= fluctuation_update_interval:
+		fluctuation_timer = 0.0
+		update_confidence_fluctuations()
+	
 	# Update bounding boxes in vision mode
 	if vision_mode:
 		update_interactable_objects()  # Update interactables for yellow highlighting
@@ -92,6 +151,13 @@ func _physics_process(delta):
 	else:
 		# In normal mode, hide any bounding boxes
 		bounding_box_container.visible = false
+
+func update_confidence_fluctuations():
+	# Update fluctuations for all detected objects
+	for obj in detected_objects:
+		if obj != null and is_instance_valid(obj):
+			var fluctuation = randf_range(-0.05, 0.05)
+			confidence_fluctuations[obj] = fluctuation
 
 func find_all_prefabs():
 	detected_objects.clear()
@@ -132,12 +198,15 @@ func update_bounding_boxes():
 		if obj == null or !is_instance_valid(obj):
 			continue
 			
-		# Check if object is within detection range
-		var distance_to_object = camera.global_position.distance_to(get_object_center(obj))
-		if distance_to_object > max_detection_distance:
+		# Skip walls - don't show bounding boxes for them
+		if obj.object_label == "Wall":
 			continue
 			
-		# Check if object's center is in line of sight
+		# Check if object should be visible in vision mode
+		if !obj.should_be_visible_in_vision_mode():
+			continue
+			
+		# Check if object's center is in line of sight (walls can block vision)
 		if !is_object_center_in_line_of_sight(obj):
 			continue
 			
@@ -154,6 +223,8 @@ func calculate_screen_bounding_box(obj: BasePrefab) -> Rect2:
 	var aabb = get_object_aabb(obj)
 	if aabb.size == Vector3.ZERO:
 		return Rect2()
+	
+	# Removed distance and field of view checks
 	
 	# Get all 8 corners of the AABB
 	var corners = [
@@ -185,13 +256,9 @@ func calculate_screen_bounding_box(obj: BasePrefab) -> Rect2:
 	if !any_in_front:
 		return Rect2()
 	
-	# Clamp to screen bounds
-	var screen_size = viewport.get_visible_rect().size
-	min_screen.x = max(0, min_screen.x)
-	min_screen.y = max(0, min_screen.y)
-	max_screen.x = min(screen_size.x, max_screen.x)
-	max_screen.y = min(screen_size.y, max_screen.y)
+	# Removed screen boundary checks - allow bounding boxes to extend outside screen
 	
+	# Only return the bounding box if it's valid
 	if min_screen.x >= max_screen.x or min_screen.y >= max_screen.y:
 		return Rect2()
 	
@@ -277,29 +344,43 @@ func create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interactable_in_ran
 	
 	# Choose color based on interactability and range
 	var border_color = Color.GREEN
-	var label_color = Color.GREEN
+	var label_bg_color = Color.GREEN
 	if is_interactable_in_range:
 		border_color = Color.YELLOW
-		label_color = Color.YELLOW
+		label_bg_color = Color.YELLOW
 	
 	# Create hollow border using 4 ColorRect nodes
 	create_hollow_border(container, bbox.size, border_color)
 	
-	# Create label background
-	var label_bg = ColorRect.new()
-	label_bg.color = Color(0, 0, 0, 0.8)
-	label_bg.position = Vector2(0, -30)
-	var label_text = obj.object_label + ": " + str(obj.confidence)
+	# Prepare label text
+	var fluctuation = confidence_fluctuations.get(obj, 0.0)
+	var display_confidence = clamp(obj.confidence + fluctuation, 0.0, 1.0)
+	var label_text = obj.object_label + ": " + str(round(display_confidence * 100) / 100.0)
 	if is_interactable_in_range:
 		label_text += " [INTERACT]"
-	label_bg.size = Vector2(max(100, label_text.length() * 8 + 20), 25)
-	container.add_child(label_bg)
 	
-	# Create label with appropriate color
+	# Use Godot's built-in text measurement for accurate sizing
 	var label = Label.new()
 	label.text = label_text
+	label.add_theme_color_override("font_color", Color.BLACK)
+	label.add_theme_font_size_override("font_size", 20)
+	
+	# Measure the actual text size
+	var font = label.get_theme_default_font()
+	var font_size = 20
+	var text_size = font.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	
+	# Create background with measured width plus padding
+	var padding_horizontal = 10  # 5 pixels on each side
+	var label_bg = ColorRect.new()
+	label_bg.color = label_bg_color
+	label_bg.size = Vector2(text_size.x + padding_horizontal, 25)
+	label_bg.position = Vector2(0, -30)
+	
+	# Position label with left padding
 	label.position = Vector2(5, -28)
-	label.add_theme_color_override("font_color", label_color)
+	
+	container.add_child(label_bg)
 	container.add_child(label)
 
 func create_hollow_border(container: Control, box_size: Vector2, color: Color = Color.GREEN):
@@ -378,6 +459,10 @@ func update_interactable_objects():
 	
 	for obj in detected_objects:
 		if obj == null or !is_instance_valid(obj) or !obj.is_interactable:
+			continue
+		
+		# Check if object should be visible in vision mode (this also affects interactability)
+		if !obj.should_be_visible_in_vision_mode():
 			continue
 		
 		var obj_center = get_object_center(obj)

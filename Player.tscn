@@ -1,36 +1,44 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4j8kqx6yk8xv"]
+[gd_scene load_steps=4 format=3 uid="uid://c4j8kqx6yk8xv"]
 
 [ext_resource type="Script" path="res://FirstPersonController.gd" id="1_0m0n0"]
+[ext_resource type="PackedScene" uid="uid://bxk8kqy6yk8xv" path="res://PlayerUI.tscn" id="2_ui"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1h2v3"]
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="Node"]
+
+[node name="PlayerUI" parent="." instance=ExtResource("2_ui")]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport"]
 script = ExtResource("1_0m0n0")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_1h2v3")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 
-[node name="UIOverlay" type="Control" parent="."]
+[node name="UIOverlay" type="Control" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
-[node name="BlackScreen" type="ColorRect" parent="UIOverlay"]
+[node name="BlackScreen" type="ColorRect" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D/UIOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0, 0, 1)
 visible = false
+mouse_filter = 2
 
-[node name="BoundingBoxContainer" type="Control" parent="UIOverlay"]
+[node name="BoundingBoxContainer" type="Control" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D/UIOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 visible = false
+mouse_filter = 2

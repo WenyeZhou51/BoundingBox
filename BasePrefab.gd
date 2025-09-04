@@ -14,3 +14,7 @@ func interact():
 		print("Interacting with: ", object_label)
 	else:
 		print("This object is not interactable")
+
+# Virtual function to be overridden by objects that can control their vision mode visibility
+func should_be_visible_in_vision_mode() -> bool:
+	return true  # By default, all objects are visible in vision mode

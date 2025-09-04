@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3 uid="uid://dwxhcb5ygq7jq"]
+
+[ext_resource type="Script" path="res://DeskPrefab.gd" id="1_desk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_desk_top"]
+size = Vector3(2, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_desk_top"]
+size = Vector3(2, 0.1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_desk_leg"]
+size = Vector3(0.1, 0.75, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_desk_leg"]
+size = Vector3(0.1, 0.75, 0.1)
+
+[node name="DeskPrefab" type="Node3D"]
+script = ExtResource("1_desk")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="DeskTop" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/DeskTop"]
+shape = SubResource("BoxShape3D_desk_top")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/DeskTop"]
+mesh = SubResource("BoxMesh_desk_top")
+
+[node name="Leg1" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.375, -0.4)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Leg1"]
+shape = SubResource("BoxShape3D_desk_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Leg1"]
+mesh = SubResource("BoxMesh_desk_leg")
+
+[node name="Leg2" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.375, -0.4)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Leg2"]
+shape = SubResource("BoxShape3D_desk_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Leg2"]
+mesh = SubResource("BoxMesh_desk_leg")
+
+[node name="Leg3" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.375, 0.4)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Leg3"]
+shape = SubResource("BoxShape3D_desk_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Leg3"]
+mesh = SubResource("BoxMesh_desk_leg")
+
+[node name="Leg4" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.375, 0.4)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Leg4"]
+shape = SubResource("BoxShape3D_desk_leg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Leg4"]
+mesh = SubResource("BoxMesh_desk_leg")

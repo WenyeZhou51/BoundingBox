@@ -2,5 +2,5 @@ extends BasePrefab
 
 func _ready():
 	object_label = "Person"
-	confidence = 0.8
+	confidence = 0.93
 	super._ready()  # Call parent's _ready function
