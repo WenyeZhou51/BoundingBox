@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://de7wk7ig1g8pi"]
+[gd_scene load_steps=4 format=3 uid="uid://de7wk7ig1g8pi"]
 
 [ext_resource type="Script" path="res://IntroSequence.gd" id="1_intro"]
+[ext_resource type="AudioStream" uid="uid://b4rdbp8jclhcw" path="res://Audio/Incoming message sound.wav" id="2_incoming_message"]
+[ext_resource type="AudioStream" uid="uid://lgqkg5jwwgdy" path="res://Audio/Confirm sound.mp3" id="3_confirm_sound"]
 
 [node name="PlayerUI" type="Control"]
 layout_mode = 3
@@ -142,6 +144,12 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Close"
+
+[node name="IncomingMessageAudio" type="AudioStreamPlayer" parent="ViewportFrame/SubViewportContainer/SubViewport/IntroSequence"]
+stream = ExtResource("2_incoming_message")
+
+[node name="ConfirmSoundAudio" type="AudioStreamPlayer" parent="ViewportFrame/SubViewportContainer/SubViewport/IntroSequence"]
+stream = ExtResource("3_confirm_sound")
 
 [node name="BottomLeftLabel" type="Label" parent="."]
 layout_mode = 1

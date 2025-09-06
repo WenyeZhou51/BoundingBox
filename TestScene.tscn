@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ceiub3rnqc0x8"]
+[gd_scene load_steps=14 format=3 uid="uid://ceiub3rnqc0x8"]
 
 [ext_resource type="PackedScene" uid="uid://c4j8kqx6yk8xv" path="res://Player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://bwxhcb5ygq7jq" path="res://PersonPrefab.tscn" id="2_person"]
@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://dwxhcb5ygq7jq" path="res://DeskPrefab.tscn" id="6_desk"]
 [ext_resource type="PackedScene" uid="uid://2jlp88pvkcry" path="res://ChairPrefab.tscn" id="7_chair"]
 [ext_resource type="PackedScene" uid="uid://b2jlp88pvkcry" path="res://BallPrefab.tscn" id="8_ball"]
+[ext_resource type="PackedScene" uid="uid://b0vgrtcuih5hh" path="res://LaptopPrefab.tscn" id="9_laptop"]
+[ext_resource type="PackedScene" uid="uid://bwxm8k7ig2iap" path="res://MirrorPrefab.tscn" id="10_mirror"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(50, 1, 50)
@@ -43,7 +45,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 2)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.77922, 1.90735e-06, -3.23639)
 
 [node name="DoorPrefab" parent="." instance=ExtResource("4_door")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.47945, -0.0179396, -7.50246)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
@@ -51,22 +53,27 @@ transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1")
 
-[node name="Room" type="Node3D" parent="."]
+[node name="Room1" type="Node3D" parent="."]
 
-[node name="WallNorth" parent="Room" instance=ExtResource("5_wall")]
-transform = Transform3D(0.894002, 0, 0, 0, 1, 0, 0, 0, 1, 2.99502, 2.43885, -7.41442)
+[node name="WallSouth" parent="Room1" instance=ExtResource("5_wall")]
+transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 5)
 
-[node name="WallNorth2" parent="Room" instance=ExtResource("5_wall")]
-transform = Transform3D(0.894002, 0, 0, 0, 1, 0, 0, 0, 1, -8.293, 2.31841, -7.15284)
+[node name="WallEast" parent="Room1" instance=ExtResource("5_wall")]
+transform = Transform3D(0, 0, 1.3, 0, 1, 0, -1, 0, 0, 8, 1.5, -1.5)
 
-[node name="WallSouth" parent="Room" instance=ExtResource("5_wall")]
-transform = Transform3D(1.76257, 0, 0, 0, 1, 0, 0, 0, 1, 2.5965, 1.5, 4.80756)
+[node name="WallWest" parent="Room1" instance=ExtResource("5_wall")]
+transform = Transform3D(0, 0, 1.3, 0, 1, 0, -1, 0, 0, -8, 1.5, -1.5)
 
-[node name="WallEast" parent="Room" instance=ExtResource("5_wall")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1.68615, 0, 0, 7.48732, 1.5, -0.200728)
+[node name="Room2" type="Node3D" parent="."]
 
-[node name="WallWest" parent="Room" instance=ExtResource("5_wall")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1.74719, 0, 0, -5.88166, 1.5, 0)
+[node name="WallNorth2" parent="Room2" instance=ExtResource("5_wall")]
+transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -20)
+
+[node name="WallEast2" parent="Room2" instance=ExtResource("5_wall")]
+transform = Transform3D(0, 0, 1.2, 0, 1, 0, -1, 0, 0, 8, 1.5, -14)
+
+[node name="WallWest2" parent="Room2" instance=ExtResource("5_wall")]
+transform = Transform3D(0, 0, 1.2, 0, 1, 0, -1, 0, 0, -8, 1.5, -14)
 
 [node name="Furniture" type="Node3D" parent="."]
 
@@ -76,5 +83,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -3)
 [node name="ChairPrefab" parent="Furniture" instance=ExtResource("7_chair")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -2)
 
+[node name="LaptopPrefab" parent="Furniture" instance=ExtResource("9_laptop")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.75, -3)
+
 [node name="BallPrefab" parent="." instance=ExtResource("8_ball")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 0)
+
+[node name="Room2Furniture" type="Node3D" parent="."]
+
+[node name="MirrorPrefab" parent="Room2Furniture" instance=ExtResource("10_mirror")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -14)
+
+[node name="ChairPrefab2" parent="Room2Furniture" instance=ExtResource("7_chair")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -12)
+
+[node name="PersonPrefab2" parent="Room2Furniture" instance=ExtResource("2_person")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -16)

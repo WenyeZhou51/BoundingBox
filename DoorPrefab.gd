@@ -21,6 +21,9 @@ func _ready():
 	disappear_timer.timeout.connect(_on_disappear_timeout)
 	add_child(disappear_timer)
 	
+	# Debug: Print door position
+	print("Door positioned at: ", global_position)
+	
 	super._ready()  # Call parent's _ready function
 
 func interact():

@@ -7,6 +7,10 @@ extends Control
 @onready var letter_content: RichTextLabel = $LetterPanel/LetterContent
 @onready var close_button: Button = $LetterPanel/CloseButton
 
+# Audio nodes
+@onready var incoming_message_audio: AudioStreamPlayer = $IncomingMessageAudio
+@onready var confirm_sound_audio: AudioStreamPlayer = $ConfirmSoundAudio
+
 signal intro_complete
 
 var flash_count: int = 0
@@ -87,6 +91,9 @@ func toggle_message_box():
 	message_box.visible = !message_box.visible
 	
 	if message_box.visible:
+		# Play incoming message sound each time the popup flashes
+		if incoming_message_audio:
+			incoming_message_audio.play()
 		flash_count += 1
 		if flash_count >= max_flashes:
 			# After showing the message 3 times, hide it and show letter
@@ -99,6 +106,10 @@ func show_letter():
 	letter_panel.visible = true
 
 func _on_close_button_pressed():
+	# Play confirm sound when closing the message
+	if confirm_sound_audio:
+		confirm_sound_audio.play()
+	
 	current_state = IntroState.COMPLETE
 	# Hide all intro elements
 	black_screen.visible = false

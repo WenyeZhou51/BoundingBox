@@ -11,6 +11,10 @@ extends CharacterBody3D
 @onready var black_screen: ColorRect = $UIOverlay/BlackScreen
 @onready var bounding_box_container: Control = $UIOverlay/BoundingBoxContainer
 
+# Audio nodes
+@onready var footstep_audio: AudioStreamPlayer = $FootstepAudio
+@onready var gun_sound_audio: AudioStreamPlayer = $GunSoundAudio
+
 # Reference to the intro sequence
 var intro_sequence: Control
 var game_started: bool = false
@@ -26,12 +30,20 @@ var confidence_fluctuations: Dictionary = {}  # Store fluctuations for each obje
 var fluctuation_timer: float = 0.0
 var fluctuation_update_interval: float = 1.0  # Update every second
 
+# Footstep audio variables
+var is_walking: bool = false
+var was_walking: bool = false
+
 func _ready():
 	# Add player to group for easy finding by other scripts
 	add_to_group("player")
 	
 	# Don't capture mouse cursor initially - wait for intro to complete
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
+	# Set up audio properties
+	if footstep_audio and footstep_audio.stream:
+		footstep_audio.stream.loop = true
 	
 	# Find all BasePrefab objects in the scene
 	find_all_prefabs()
@@ -81,9 +93,14 @@ func _input(event):
 		toggle_vision_mode()
 	
 	# Handle mouse click for interaction
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+	if event is InputEventMouseButton and event.pressed and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		if event.button_index == MOUSE_BUTTON_LEFT:
 			handle_interaction()
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			# Play gun sound on right click
+			if gun_sound_audio:
+				gun_sound_audio.play()
+			handle_right_click_interaction()
 
 func _physics_process(delta):
 	# Don't handle physics until game has started
@@ -117,11 +134,16 @@ func _physics_process(delta):
 	if direction:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
+		is_walking = true
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
+		is_walking = false
 
 	move_and_slide()
+	
+	# Handle footstep audio
+	handle_footstep_audio()
 	
 	# Push RigidBody3D objects when colliding with them
 	for i in get_slide_collision_count():
@@ -165,7 +187,14 @@ func find_all_prefabs():
 	_find_prefabs_recursive(scene_root)
 	print("Found ", detected_objects.size(), " prefab objects:")
 	for obj in detected_objects:
-		print("  - ", obj.object_label, " (Interactable: ", obj.is_interactable, ")")
+		var is_mirror = obj.has_method("get_player_reflection_info")
+		print("  - ", obj.object_label, " (Interactable: ", obj.is_interactable, ", Mirror: ", is_mirror, ")")
+
+# Add a new detected object to the list (used when spawning broken glass)
+func add_detected_object(obj: BasePrefab):
+	if obj not in detected_objects:
+		detected_objects.append(obj)
+		print("Added new detected object: ", obj.object_label)
 
 func _find_prefabs_recursive(node: Node):
 	if node is BasePrefab:
@@ -193,6 +222,9 @@ func clear_bounding_boxes():
 
 func update_bounding_boxes():
 	clear_bounding_boxes()
+	
+	# First, check for mirror reflections
+	check_mirror_reflections()
 	
 	for obj in detected_objects:
 		if obj == null or !is_instance_valid(obj):
@@ -441,6 +473,33 @@ func handle_interaction():
 	else:
 		print("No object in interaction range")
 
+# Handle right-click interaction (for breaking objects like mirrors)
+func handle_right_click_interaction():
+	print("Attempting right-click interaction...")
+	# Cast a ray from the camera forward to detect what the player is looking at
+	var space_state = get_world_3d().direct_space_state
+	var camera_pos = camera.global_position
+	var camera_forward = -camera.global_transform.basis.z
+	var ray_end = camera_pos + camera_forward * interaction_distance
+	
+	var query = PhysicsRayQueryParameters3D.create(camera_pos, ray_end)
+	query.exclude = [self]
+	
+	var result = space_state.intersect_ray(query)
+	
+	if not result.is_empty():
+		var hit_object = result.collider
+		
+		# Find the BasePrefab parent of the hit object
+		var prefab = find_prefab_parent(hit_object)
+		if prefab and prefab.has_method("right_click_interact"):
+			print("Right-click interacting with: ", prefab.object_label)
+			prefab.right_click_interact()
+		else:
+			print("Hit object doesn't support right-click interaction")
+	else:
+		print("No object in right-click interaction range")
+
 # Find the BasePrefab parent of a node
 func find_prefab_parent(node: Node) -> BasePrefab:
 	var current_node = node
@@ -450,33 +509,28 @@ func find_prefab_parent(node: Node) -> BasePrefab:
 		current_node = current_node.get_parent()
 	return null
 
-# Update list of interactable objects in range
+# Update list of interactable objects in range using raycast (same as actual interaction)
 func update_interactable_objects():
 	interactable_objects_in_range.clear()
 	
-	var player_pos = global_position
+	# Use the same raycast logic as handle_interaction() for consistency
+	var space_state = get_world_3d().direct_space_state
+	var camera_pos = camera.global_position
 	var camera_forward = -camera.global_transform.basis.z
+	var ray_end = camera_pos + camera_forward * interaction_distance
 	
-	for obj in detected_objects:
-		if obj == null or !is_instance_valid(obj) or !obj.is_interactable:
-			continue
+	var query = PhysicsRayQueryParameters3D.create(camera_pos, ray_end)
+	query.exclude = [self]
+	
+	var result = space_state.intersect_ray(query)
+	
+	if not result.is_empty():
+		var hit_object = result.collider
 		
-		# Check if object should be visible in vision mode (this also affects interactability)
-		if !obj.should_be_visible_in_vision_mode():
-			continue
-		
-		var obj_center = get_object_center(obj)
-		var distance_to_object = player_pos.distance_to(obj_center)
-		
-		# Check if object is within interaction distance
-		if distance_to_object <= interaction_distance:
-			# Check if object is roughly in front of the player
-			var direction_to_object = (obj_center - player_pos).normalized()
-			var dot_product = camera_forward.dot(direction_to_object)
-			
-			# If dot product is positive, object is in front of player
-			if dot_product > 0.3:  # Allow some tolerance for "in front"
-				interactable_objects_in_range.append(obj)
+		# Find the BasePrefab parent of the hit object
+		var prefab = find_prefab_parent(hit_object)
+		if prefab and prefab.is_interactable and prefab.should_be_visible_in_vision_mode():
+			interactable_objects_in_range.append(prefab)
 	
 	# Only print in vision mode when we have interactables
 	if vision_mode and interactable_objects_in_range.size() > 0:
@@ -496,3 +550,109 @@ func update_interactable_highlighting():
 	# We're in vision mode - show yellow boxes for interactables in range
 	# This will be handled by update_bounding_boxes() which calls create_bounding_box_ui
 	# with the is_interactable_in_range parameter
+
+# Check for mirror reflections and create bounding boxes for player reflections
+func check_mirror_reflections():
+	# Find all mirror objects in the scene
+	var mirror_count = 0
+	for obj in detected_objects:
+		if obj == null or !is_instance_valid(obj):
+			continue
+		
+		# Check if this is a mirror (has the get_player_reflection_info method)
+		if obj.has_method("get_player_reflection_info"):
+			mirror_count += 1
+			var reflection_info = obj.get_player_reflection_info()
+			if reflection_info.has("active") and reflection_info.active:
+				print("FirstPersonController: Creating reflection bounding box")
+				create_reflection_bounding_box(reflection_info)
+	
+	# Debug: Print mirror count once per second
+	if mirror_count > 0:
+		var current_time = Time.get_time_dict_from_system()
+		var seconds = current_time.second
+		if seconds != get_meta("last_debug_second", -1):
+			set_meta("last_debug_second", seconds)
+			print("FirstPersonController: Found ", mirror_count, " mirrors in detected_objects")
+
+# Create a bounding box for the player reflection
+func create_reflection_bounding_box(reflection_info: Dictionary):
+	var reflection_pos = reflection_info.position
+	var label_text = reflection_info.label
+	var confidence = reflection_info.confidence
+	
+	# Calculate screen position for the reflection
+	var screen_pos = camera.unproject_position(reflection_pos)
+	
+	# Check if reflection is in front of camera
+	var local_pos = camera.to_local(reflection_pos)
+	if local_pos.z >= 0:  # Behind camera
+		return
+	
+	# Create a much larger bounding box size for the player reflection
+	# Make it about half the size of the mirror (which is 3x4 units)
+	var bbox_size = Vector2(300, 400)  # Width x Height in pixels - half the mirror size for proper reflection
+	var bbox_pos = screen_pos - bbox_size / 2
+	var bbox = Rect2(bbox_pos, bbox_size)
+	
+	# Create the reflection bounding box UI
+	create_reflection_bounding_box_ui(reflection_info, bbox)
+
+# Create UI for reflection bounding box (similar to create_bounding_box_ui but for reflections)
+func create_reflection_bounding_box_ui(reflection_info: Dictionary, bbox: Rect2):
+	# Create container for this bounding box
+	var container = Control.new()
+	container.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	container.position = bbox.position
+	container.size = bbox.size
+	bounding_box_container.add_child(container)
+	
+	# Use green color like other bounding boxes
+	var border_color = Color.GREEN
+	var label_bg_color = Color.GREEN
+	
+	# Create hollow border using 4 ColorRect nodes
+	create_hollow_border(container, bbox.size, border_color)
+	
+	# Prepare label text for reflection
+	var label_text = reflection_info.label + ": " + str(reflection_info.confidence)
+	
+	# Use Godot's built-in text measurement for accurate sizing
+	var label = Label.new()
+	label.text = label_text
+	label.add_theme_color_override("font_color", Color.BLACK)
+	label.add_theme_font_size_override("font_size", 20)
+	
+	# Measure the actual text size
+	var font = label.get_theme_default_font()
+	var font_size = 20
+	var text_size = font.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	
+	# Create background with measured width plus padding
+	var padding_horizontal = 10  # 5 pixels on each side
+	var label_bg = ColorRect.new()
+	label_bg.color = label_bg_color
+	label_bg.size = Vector2(text_size.x + padding_horizontal, 25)
+	label_bg.position = Vector2(0, -30)
+	
+	# Position label with left padding
+	label.position = Vector2(5, -28)
+	
+	container.add_child(label_bg)
+	container.add_child(label)
+
+# Handle footstep audio based on walking state
+func handle_footstep_audio():
+	# Only play footsteps if player is on the floor and walking
+	var should_play_footsteps = is_walking and is_on_floor()
+	
+	if should_play_footsteps and not was_walking:
+		# Start playing footsteps
+		if footstep_audio and not footstep_audio.playing:
+			footstep_audio.play()
+	elif not should_play_footsteps and was_walking:
+		# Stop playing footsteps
+		if footstep_audio and footstep_audio.playing:
+			footstep_audio.stop()
+	
+	was_walking = should_play_footsteps
