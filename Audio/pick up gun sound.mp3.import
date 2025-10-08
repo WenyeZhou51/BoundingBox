@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://djvjcswx2gc7k"
+path="res://.godot/imported/pick up gun sound.mp3-c955e8ef3e092514745f7461ef849152.mp3str"
+
+[deps]
+
+source_file="res://Audio/pick up gun sound.mp3"
+dest_files=["res://.godot/imported/pick up gun sound.mp3-c955e8ef3e092514745f7461ef849152.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

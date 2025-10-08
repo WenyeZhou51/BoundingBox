@@ -1,0 +1,183 @@
+[gd_scene load_steps=17 format=3 uid="uid://bw5qhpg0akq5"]
+
+[ext_resource type="PackedScene" uid="uid://c8scami03ldyv" path="res://CeilingLightPrefab.tscn" id="2_clight"]
+[ext_resource type="PackedScene" uid="uid://bx4364163trg7" path="res://PuddlePrefab.tscn" id="3_puddle"]
+[ext_resource type="PackedScene" uid="uid://dq61fyb3xpnt2" path="res://DriedPaintPrefab.tscn" id="4_paint"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_color = Color(0.6, 0.6, 0.6, 1)
+ambient_light_energy = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(3, 0.1, 12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.35, 0.35, 0.35, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(3, 0.1, 12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_segment"]
+size = Vector3(0.2, 3, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.9, 0.9, 0.85, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_segment"]
+size = Vector3(0.2, 3, 8.04472)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ceiling"]
+size = Vector3(3, 0.1, 12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ceiling"]
+albedo_color = Color(0.95, 0.95, 0.95, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_door_wall"]
+size = Vector3(0.5, 3, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door_wall"]
+size = Vector3(0.5, 3, 0.2)
+
+[node name="HallwayScene" type="Node3D"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
+light_energy = 0.3
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_1")
+
+[node name="Hallway" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Hallway"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Hallway/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hallway/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_floor")
+
+[node name="WallLeftMiddle" type="StaticBody3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.51102, -1.5, 1.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Hallway/WallLeftMiddle"]
+transform = Transform3D(0.996088, 0, 0, 0, 0.996088, 0, 0, 0, 0.996088, 0, 0, 0)
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hallway/WallLeftMiddle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0193496)
+shape = SubResource("BoxShape3D_wall_segment")
+
+[node name="WallRightMiddle" type="StaticBody3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Hallway/WallRightMiddle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.51984, 0, 0, 0)
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Hallway/WallRightMiddle"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.0929437, 0.0380976, 0.0612025)
+shape = SubResource("BoxShape3D_floor")
+
+[node name="Ceiling" type="StaticBody3D" parent="Hallway"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Hallway/Ceiling"]
+mesh = SubResource("BoxMesh_ceiling")
+surface_material_override/0 = SubResource("StandardMaterial3D_ceiling")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hallway/Ceiling"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="Doors" type="Node3D" parent="."]
+
+[node name="DoorWalls" type="Node3D" parent="."]
+
+[node name="DoorWallFrontLeft" type="StaticBody3D" parent="DoorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 1.5, -6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorWalls/DoorWallFrontLeft"]
+mesh = SubResource("BoxMesh_door_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorWalls/DoorWallFrontLeft"]
+shape = SubResource("BoxShape3D_door_wall")
+
+[node name="DoorWallFrontRight" type="StaticBody3D" parent="DoorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 1.5, -6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorWalls/DoorWallFrontRight"]
+mesh = SubResource("BoxMesh_door_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorWalls/DoorWallFrontRight"]
+shape = SubResource("BoxShape3D_door_wall")
+
+[node name="DoorWallBackLeft" type="StaticBody3D" parent="DoorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 1.5, 6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorWalls/DoorWallBackLeft"]
+mesh = SubResource("BoxMesh_door_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorWalls/DoorWallBackLeft"]
+shape = SubResource("BoxShape3D_door_wall")
+
+[node name="DoorWallBackRight" type="StaticBody3D" parent="DoorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 1.5, 6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorWalls/DoorWallBackRight"]
+mesh = SubResource("BoxMesh_door_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorWalls/DoorWallBackRight"]
+shape = SubResource("BoxShape3D_door_wall")
+
+[node name="CeilingLights" type="Node3D" parent="."]
+
+[node name="CeilingLight1" parent="CeilingLights" instance=ExtResource("2_clight")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.95, -4)
+
+[node name="CeilingLight2" parent="CeilingLights" instance=ExtResource("2_clight")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.95, -2)
+
+[node name="CeilingLight3" parent="CeilingLights" instance=ExtResource("2_clight")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.95, 0)
+
+[node name="CeilingLight4" parent="CeilingLights" instance=ExtResource("2_clight")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.95, 2)
+
+[node name="CeilingLight5" parent="CeilingLights" instance=ExtResource("2_clight")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.95, 4)
+
+[node name="Puddles" type="Node3D" parent="."]
+
+[node name="Puddle1" parent="Puddles" instance=ExtResource("3_puddle")]
+transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 3.08733, -0.3, 0, -1.75748)
+
+[node name="Puddle2" parent="Puddles" instance=ExtResource("3_puddle")]
+transform = Transform3D(0.8, 0, 0, 0, 1, 0, 0, 0, 2.25729, 0.4, 0, 0.5)
+
+[node name="Puddle3" parent="Puddles" instance=ExtResource("3_puddle")]
+transform = Transform3D(1.42163, 0, 0, 0, 1, 0, 0, 0, 2.00649, -0.2, 0, 3.55278)
+
+[node name="DriedPaint" type="Node3D" parent="."]
+
+[node name="Paint1" parent="DriedPaint" instance=ExtResource("4_paint")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.39, 1.2, -4.5)

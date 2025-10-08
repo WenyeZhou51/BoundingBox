@@ -1,0 +1,284 @@
+[gd_scene load_steps=21 format=3 uid="uid://bu1rwlcvu1vjh"]
+
+[ext_resource type="PackedScene" uid="uid://hmlv008df1br" path="res://HangingMeatPrefab.tscn" id="1_meat"]
+[ext_resource type="PackedScene" uid="uid://hmlv008dlcqc" path="res://RopePrefab.tscn" id="2_rope"]
+[ext_resource type="PackedScene" uid="uid://c8scami4alaxg" path="res://FridgePrefab.tscn" id="3_fridge"]
+[ext_resource type="PackedScene" uid="uid://hmlv008dk5dc" path="res://RiceSackPrefab.tscn" id="4_rice"]
+[ext_resource type="PackedScene" uid="uid://pw8288o8l4hg" path="res://IceBlockPrefab.tscn" id="5_ice"]
+[ext_resource type="PackedScene" uid="uid://dnfeq58ch3704" path="res://FrozenBoxPrefab.tscn" id="6_frozenbox"]
+[ext_resource type="PackedScene" uid="uid://hmlv008dbcpi" path="res://MeatHookPrefab.tscn" id="7_hook"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_color = Color(0.7, 0.8, 0.9, 1)
+ambient_light_energy = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(12, 0.1, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.75, 0.8, 0.85, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(12, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_long"]
+size = Vector3(12, 4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.85, 0.9, 0.95, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_long"]
+size = Vector3(12, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_segment"]
+size = Vector3(4, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_segment"]
+size = Vector3(4, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_short"]
+size = Vector3(10, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_short"]
+size = Vector3(10, 4, 0.2)
+
+[node name="FreezerScene" type="Node3D"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
+light_color = Color(0.8, 0.85, 1, 1)
+light_energy = 0.6
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_1")
+
+[node name="Room" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Room"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_floor")
+
+[node name="WallNorth" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallNorth"]
+mesh = SubResource("BoxMesh_wall_long")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallNorth"]
+shape = SubResource("BoxShape3D_wall_long")
+
+[node name="WallSouthLeft" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, 5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallSouthLeft"]
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallSouthLeft"]
+shape = SubResource("BoxShape3D_wall_segment")
+
+[node name="WallSouthRight" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2, 5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallSouthRight"]
+transform = Transform3D(1.43992, 0, 0, 0, 1, 0, 0, 0, 1, -1.06269, 0, 0)
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Room/WallSouthRight"]
+transform = Transform3D(0.831648, 0, 0, 0, 0.298972, 0, 0, 0, 1, -4.98102, 1.44053, 0)
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallSouthRight"]
+shape = SubResource("BoxShape3D_wall_segment")
+
+[node name="WallEast" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 6, 2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallEast"]
+mesh = SubResource("BoxMesh_wall_short")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallEast"]
+shape = SubResource("BoxShape3D_wall_short")
+
+[node name="WallWest" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -6, 2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallWest"]
+mesh = SubResource("BoxMesh_wall_short")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallWest"]
+shape = SubResource("BoxShape3D_wall_short")
+
+[node name="Ceiling" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/Ceiling"]
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/Ceiling"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="Fridges" type="Node3D" parent="."]
+
+[node name="Fridge1" parent="Fridges" instance=ExtResource("3_fridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -4)
+
+[node name="Fridge2" parent="Fridges" instance=ExtResource("3_fridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -4)
+
+[node name="Fridge3" parent="Fridges" instance=ExtResource("3_fridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -4)
+
+[node name="Fridge4" parent="Fridges" instance=ExtResource("3_fridge")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5, 0, 3)
+
+[node name="Fridge5" parent="Fridges" instance=ExtResource("3_fridge")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5, 0, 1)
+
+[node name="Fridge6" parent="Fridges" instance=ExtResource("3_fridge")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5, 0, -1)
+
+[node name="HangingMeat" type="Node3D" parent="."]
+
+[node name="Rope1" parent="HangingMeat" instance=ExtResource("2_rope")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3.5, 0)
+
+[node name="MeatHook1" parent="HangingMeat" instance=ExtResource("7_hook")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -1, 3.9, 0)
+
+[node name="Meat1" parent="HangingMeat" instance=ExtResource("1_meat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.7, 0)
+
+[node name="Rope2" parent="HangingMeat" instance=ExtResource("2_rope")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3.5, 0)
+
+[node name="MeatHook2" parent="HangingMeat" instance=ExtResource("7_hook")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 1, 3.9, 0)
+
+[node name="Meat2" parent="HangingMeat" instance=ExtResource("1_meat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.7, 0)
+
+[node name="Rope3" parent="HangingMeat" instance=ExtResource("2_rope")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3.5, 2)
+
+[node name="MeatHook3" parent="HangingMeat" instance=ExtResource("7_hook")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -1, 3.9, 2)
+
+[node name="Meat3" parent="HangingMeat" instance=ExtResource("1_meat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.7, 2)
+
+[node name="Rope4" parent="HangingMeat" instance=ExtResource("2_rope")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3.5, 2)
+
+[node name="MeatHook4" parent="HangingMeat" instance=ExtResource("7_hook")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 1, 3.9, 2)
+
+[node name="Meat4" parent="HangingMeat" instance=ExtResource("1_meat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.7, 2)
+
+[node name="Rope5" parent="HangingMeat" instance=ExtResource("2_rope")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3.5, -2)
+
+[node name="MeatHook5" parent="HangingMeat" instance=ExtResource("7_hook")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 2.5, 3.9, -2)
+
+[node name="Meat5" parent="HangingMeat" instance=ExtResource("1_meat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.7, -2)
+
+[node name="Rope6" parent="HangingMeat" instance=ExtResource("2_rope")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3.5, 1)
+
+[node name="MeatHook6" parent="HangingMeat" instance=ExtResource("7_hook")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 2.5, 3.9, 1)
+
+[node name="Meat6" parent="HangingMeat" instance=ExtResource("1_meat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.7, 1)
+
+[node name="RiceSacks" type="Node3D" parent="."]
+
+[node name="RiceSack1" parent="RiceSacks" instance=ExtResource("4_rice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 3)
+
+[node name="RiceSack2" parent="RiceSacks" instance=ExtResource("4_rice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+
+[node name="RiceSack3" parent="RiceSacks" instance=ExtResource("4_rice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 4)
+
+[node name="RiceSack4" parent="RiceSacks" instance=ExtResource("4_rice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 4)
+
+[node name="RiceSack5" parent="RiceSacks" instance=ExtResource("4_rice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.8, 3.5)
+
+[node name="RiceSack6" parent="RiceSacks" instance=ExtResource("4_rice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3.5)
+
+[node name="RiceSack7" parent="RiceSacks" instance=ExtResource("4_rice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0, 3.5)
+
+[node name="IceBlocks" type="Node3D" parent="."]
+
+[node name="IceBlock1" parent="IceBlocks" instance=ExtResource("5_ice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -2)
+
+[node name="IceBlock2" parent="IceBlocks" instance=ExtResource("5_ice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+
+[node name="IceBlock3" parent="IceBlocks" instance=ExtResource("5_ice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -3)
+
+[node name="IceBlock4" parent="IceBlocks" instance=ExtResource("5_ice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 0)
+
+[node name="FrozenBoxes" type="Node3D" parent="."]
+
+[node name="FrozenBox1" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -3.5)
+
+[node name="FrozenBox2" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 0, -3.5)
+
+[node name="FrozenBox3" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0.3, -3.5)
+
+[node name="FrozenBox4" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.3, -3.5)
+
+[node name="FrozenBox5" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.6, -3.5)
+
+[node name="FrozenBox6" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 4)
+
+[node name="FrozenBox7" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, 4)
+
+[node name="FrozenBox8" parent="FrozenBoxes" instance=ExtResource("6_frozenbox")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.3, 4)
+
+[node name="Doors" type="Node3D" parent="."]

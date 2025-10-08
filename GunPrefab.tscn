@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://gun7prefab7scene"]
+
+[ext_resource type="Script" path="res://GunPrefab.gd" id="1_gun"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gun"]
+size = Vector3(0.3, 0.15, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gun"]
+albedo_color = Color(1, 1, 0, 1)
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+emission_energy = 0.3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gun"]
+size = Vector3(0.3, 0.15, 0.6)
+
+[node name="GunPrefab" type="StaticBody3D"]
+script = ExtResource("1_gun")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_gun")
+surface_material_override/0 = SubResource("StandardMaterial3D_gun")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_gun")

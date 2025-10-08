@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://btp8kqy6yk8therm"]
+
+[ext_resource type="Script" path="res://ThermometerPrefab.gd" id="1_thermometer"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_thermometer"]
+size = Vector3(0.1, 0.8, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_thermometer"]
+size = Vector3(0.1, 0.8, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thermometer"]
+albedo_color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="ThermometerPrefab" type="StaticBody3D"]
+script = ExtResource("1_thermometer")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_thermometer")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_thermometer")
+surface_material_override/0 = SubResource("StandardMaterial3D_thermometer")

@@ -1,0 +1,91 @@
+[gd_scene load_steps=10 format=3 uid="uid://c54l40l50gykk"]
+
+[ext_resource type="Script" path="res://DormRoomPrefab.gd" id="1_dorm_room"]
+[ext_resource type="PackedScene" path="res://BedPrefab.tscn" id="2_bed"]
+[ext_resource type="PackedScene" uid="uid://dwxhcb5ygq7jq" path="res://DeskPrefab.tscn" id="3_desk"]
+[ext_resource type="PackedScene" path="res://RoomPlatePrefab.tscn" id="4_room_plate"]
+[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="5_door"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
+size = Vector3(0.1, 3, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+size = Vector3(0.1, 3, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_back_wall"]
+size = Vector3(3, 3, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_back_wall"]
+size = Vector3(3, 3, 0.1)
+
+[node name="DormRoomPrefab" type="Node3D"]
+script = ExtResource("1_dorm_room")
+
+[node name="Walls" type="Node3D" parent="."]
+
+[node name="LeftWall" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/LeftWall"]
+shape = SubResource("BoxShape3D_wall")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/LeftWall"]
+mesh = SubResource("BoxMesh_wall")
+
+[node name="Floor" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.0412698, 0.0293471, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Floor"]
+shape = SubResource("BoxShape3D_wall")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Floor"]
+mesh = SubResource("BoxMesh_wall")
+
+[node name="RightWall" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/RightWall"]
+shape = SubResource("BoxShape3D_wall")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/RightWall"]
+mesh = SubResource("BoxMesh_wall")
+
+[node name="BackWall" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -2)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/BackWall"]
+shape = SubResource("BoxShape3D_back_wall")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/BackWall"]
+mesh = SubResource("BoxMesh_back_wall")
+
+[node name="BackWall2" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(0.209513, 0, 0, 0, 1, 0, 0, 0, 1, -1.26386, 1.5, 1.98684)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/BackWall2"]
+shape = SubResource("BoxShape3D_back_wall")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/BackWall2"]
+mesh = SubResource("BoxMesh_back_wall")
+
+[node name="BackWall3" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(0.209513, 0, 0, 0, 1, 0, 0, 0, 1, 1.2597, 1.5, 1.98684)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/BackWall3"]
+shape = SubResource("BoxShape3D_back_wall")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/BackWall3"]
+transform = Transform3D(0.993429, 0, 0, 0, 0.993429, 0, 0, 0, 0.993429, 0, 0, 0)
+mesh = SubResource("BoxMesh_back_wall")
+
+[node name="BedPrefab" parent="." instance=ExtResource("2_bed")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -1.2)
+
+[node name="DeskPrefab" parent="." instance=ExtResource("3_desk")]
+transform = Transform3D(0.00506144, 0, -0.615477, 0, 1, 0, 0.999987, 0, 0.00311524, 1.10775, 0, -0.835944)
+
+[node name="RoomPlatePrefab" parent="." instance=ExtResource("4_room_plate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31728, 0.283843, 2.19829)
+
+[node name="DoorPrefab" parent="." instance=ExtResource("5_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)

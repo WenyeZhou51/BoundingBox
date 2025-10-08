@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://kitchen_doorway_001"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_doorway_side"]
+size = Vector3(0.2, 3, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_doorway"]
+albedo_color = Color(0.8, 0.8, 0.75, 1)
+
+[node name="KitchenDoorwayPrefab" type="Node3D"]
+
+[node name="LeftFrame" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.5, 0)
+mesh = SubResource("BoxMesh_doorway_side")
+surface_material_override/0 = SubResource("StandardMaterial3D_doorway")
+
+[node name="RightFrame" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.5, 0)
+mesh = SubResource("BoxMesh_doorway_side")
+surface_material_override/0 = SubResource("StandardMaterial3D_doorway")
+
+[node name="TopFrame" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
+mesh = SubResource("BoxMesh_doorway_side")
+surface_material_override/0 = SubResource("StandardMaterial3D_doorway")
+

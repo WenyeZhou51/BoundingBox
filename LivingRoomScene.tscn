@@ -1,0 +1,174 @@
+[gd_scene load_steps=20 format=3 uid="uid://c8osnxx8ti0gr"]
+
+[ext_resource type="PackedScene" uid="uid://hmlv008dmcf7" path="res://SofaPrefab.tscn" id="1_sofa"]
+[ext_resource type="PackedScene" uid="uid://hmlv008dewnn" path="res://LampPrefab.tscn" id="2_lamp"]
+[ext_resource type="PackedScene" uid="uid://dq61fyb32pgrm" path="res://TablePrefab.tscn" id="3_table"]
+[ext_resource type="PackedScene" uid="uid://2jlp88pvkcry" path="res://ChairPrefab.tscn" id="4_chair"]
+[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8tv" path="res://TVPrefab.tscn" id="5_tv"]
+[ext_resource type="PackedScene" uid="uid://dgtbla5ryx60a" path="res://SquiggledNotePrefab.tscn" id="6_squiggled"]
+[ext_resource type="PackedScene" uid="uid://dgtbla5r0oqag" path="res://ThermometerPrefab.tscn" id="7_thermometer"]
+[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="8_door"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_color = Color(0.8, 0.8, 0.8, 1)
+ambient_light_energy = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.4, 0.35, 0.3, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+size = Vector3(10, 4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.85, 0.85, 0.8, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
+size = Vector3(10, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_segment"]
+size = Vector3(4, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_segment"]
+size = Vector3(4, 4, 0.2)
+
+[node name="LivingRoomScene" type="Node3D"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 5, 0)
+light_energy = 0.8
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_1")
+
+[node name="Room" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Room"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_floor")
+
+[node name="WallNorth" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallNorth"]
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallNorth"]
+shape = SubResource("BoxShape3D_wall")
+
+[node name="WallSouth" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallSouth"]
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallSouth"]
+shape = SubResource("BoxShape3D_wall")
+
+[node name="WallEast" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallEast"]
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallEast"]
+shape = SubResource("BoxShape3D_wall")
+
+[node name="WallWestNorth" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5, 2, -3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallWestNorth"]
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallWestNorth"]
+shape = SubResource("BoxShape3D_wall_segment")
+
+[node name="WallWestSouth" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5, 2, 3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallWestSouth"]
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallWestSouth"]
+shape = SubResource("BoxShape3D_wall_segment")
+
+[node name="Ceiling" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/Ceiling"]
+mesh = SubResource("BoxMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/Ceiling"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="Furniture" type="Node3D" parent="."]
+
+[node name="Sofa1" parent="Furniture" instance=ExtResource("1_sofa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -4.3629)
+
+[node name="Sofa2" parent="Furniture" instance=ExtResource("1_sofa")]
+transform = Transform3D(0.999944, 0, 0.0106113, 0, 1, 0, -0.0106113, 0, 0.999944, 1.76387, -2.38419e-07, -4.322)
+
+[node name="Lamp1" parent="Furniture" instance=ExtResource("2_lamp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
+
+[node name="Lamp2" parent="Furniture" instance=ExtResource("2_lamp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
+
+[node name="Table" parent="Furniture" instance=ExtResource("3_table")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="Chair1" parent="Furniture" instance=ExtResource("4_chair")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 1)
+
+[node name="Chair2" parent="Furniture" instance=ExtResource("4_chair")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 1)
+
+[node name="Chair3" parent="Furniture" instance=ExtResource("4_chair")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.5, 0, 3)
+
+[node name="Chair4" parent="Furniture" instance=ExtResource("4_chair")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.5, 0, 3)
+
+[node name="TV" parent="Furniture" instance=ExtResource("5_tv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -4.8)
+
+[node name="WallDecor" type="Node3D" parent="."]
+
+[node name="SquiggledNote" parent="WallDecor" instance=ExtResource("6_squiggled")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, -4.89)
+
+[node name="Thermometer" parent="WallDecor" instance=ExtResource("7_thermometer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 1.5, -4.89)
+
+[node name="Door" parent="." instance=ExtResource("8_door")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 0, 0)

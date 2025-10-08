@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqx8kqy6yk8paint"]
+
+[ext_resource type="Script" path="res://DriedPaintPrefab.gd" id="1_paint"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_paint"]
+size = Vector3(0.4, 0.5, 0.01)
+
+[sub_resource type="QuadMesh" id="QuadMesh_paint"]
+size = Vector2(0.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_paint"]
+albedo_color = Color(0.6, 0.2, 0.1, 1)
+roughness = 0.9
+
+[node name="DriedPaintPrefab" type="StaticBody3D"]
+script = ExtResource("1_paint")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_paint")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("QuadMesh_paint")
+surface_material_override/0 = SubResource("StandardMaterial3D_paint")

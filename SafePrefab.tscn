@@ -1,0 +1,82 @@
+[gd_scene load_steps=9 format=3 uid="uid://safe7prefab7scene"]
+
+[ext_resource type="Script" path="res://SafePrefab.gd" id="1_safe"]
+[ext_resource type="PackedScene" uid="uid://gun7prefab7scene" path="res://GunPrefab.tscn" id="2_gun"]
+[ext_resource type="AudioStream" path="res://Audio/Confirm sound.mp3" id="3_confirm_sound"]
+[ext_resource type="AudioStream" path="res://Audio/scare sound.mp3" id="4_scare_sound"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_safe_body"]
+size = Vector3(1.2, 1.5, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_safe_body"]
+size = Vector3(1.2, 1.5, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_safe_door"]
+size = Vector3(0.05, 1.4, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_safe_door"]
+size = Vector3(0.05, 1.4, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_safe_side"]
+size = Vector3(1.2, 1.5, 0.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_safe_back"]
+size = Vector3(0.05, 1.5, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_safe"]
+albedo_color = Color(0.3, 0.3, 0.3, 1)
+metallic = 0.8
+roughness = 0.2
+
+[node name="SafePrefab" type="Node3D"]
+script = ExtResource("1_safe")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="SafeBody" type="Node3D" parent="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/SafeBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("BoxMesh_safe_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_safe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/SafeBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("BoxShape3D_safe_body")
+
+[node name="SafeDoor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.75, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SafeDoor"]
+mesh = SubResource("BoxMesh_safe_door")
+surface_material_override/0 = SubResource("StandardMaterial3D_safe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.75, 0)
+shape = SubResource("BoxShape3D_safe_door")
+
+[node name="SideWallLeft" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.4)
+shape = SubResource("BoxShape3D_safe_side")
+
+[node name="SideWallRight" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.4)
+shape = SubResource("BoxShape3D_safe_side")
+
+[node name="BackWall" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.75, 0)
+shape = SubResource("BoxShape3D_safe_back")
+
+[node name="GunContainer" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+visible = false
+
+[node name="Gun" parent="GunContainer" instance=ExtResource("2_gun")]
+
+[node name="ConfirmAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_confirm_sound")
+volume_db = -10.0
+
+[node name="ScareAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_scare_sound")
+volume_db = -5.0

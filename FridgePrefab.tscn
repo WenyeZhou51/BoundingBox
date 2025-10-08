@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqx8kqy6yk8fridge"]
+
+[ext_resource type="Script" path="res://FridgePrefab.gd" id="1_fridge"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fridge"]
+size = Vector3(1.2, 2.0, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fridge"]
+size = Vector3(1.2, 2.0, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fridge"]
+albedo_color = Color(0.9, 0.9, 0.95, 1)
+metallic = 0.3
+
+[node name="FridgePrefab" type="StaticBody3D"]
+script = ExtResource("1_fridge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+shape = SubResource("BoxShape3D_fridge")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("BoxMesh_fridge")
+surface_material_override/0 = SubResource("StandardMaterial3D_fridge")
+
+

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dexgp6kpgj7cu"
+path="res://.godot/imported/open safe sound.mp3-791cd446af2307c284640d60126e0553.mp3str"
+
+[deps]
+
+source_file="res://Audio/open safe sound.mp3"
+dest_files=["res://.godot/imported/open safe sound.mp3-791cd446af2307c284640d60126e0553.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

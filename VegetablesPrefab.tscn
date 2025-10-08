@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqx8kqy6yk8veggies"]
+
+[ext_resource type="Script" path="res://VegetablesPrefab.gd" id="1_veggies"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_veggies"]
+size = Vector3(0.4, 0.3, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_veggies"]
+size = Vector3(0.4, 0.3, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_veggies"]
+albedo_color = Color(0.2, 0.7, 0.2, 1)
+
+[node name="VegetablesPrefab" type="StaticBody3D"]
+script = ExtResource("1_veggies")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_veggies")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("BoxMesh_veggies")
+surface_material_override/0 = SubResource("StandardMaterial3D_veggies")
+

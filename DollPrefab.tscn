@@ -1,0 +1,69 @@
+[gd_scene load_steps=9 format=3 uid="uid://hmlv008c6cmj"]
+
+[ext_resource type="Script" path="res://DollPrefab.gd" id="1_doll"]
+[ext_resource type="PackedScene" uid="uid://cp8vh4qjfn5r6" path="res://KeyPrefab.tscn" id="2_key"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_doll_body"]
+radius = 0.2
+height = 1.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_doll_body"]
+radius = 0.18
+height = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_doll"]
+albedo_color = Color(0.9, 0.8, 0.7, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_doll_head"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_doll_arm"]
+top_radius = 0.03
+bottom_radius = 0.03
+height = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_doll_leg"]
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.5
+
+[node name="DollPrefab" type="StaticBody3D"]
+script = ExtResource("1_doll")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.1, 0)
+shape = SubResource("CapsuleShape3D_doll_body")
+
+[node name="DollBody" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.1, 0)
+mesh = SubResource("CapsuleMesh_doll_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_doll")
+
+[node name="DollHead" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.5, 0.1, 0)
+mesh = SubResource("SphereMesh_doll_head")
+surface_material_override/0 = SubResource("StandardMaterial3D_doll")
+
+[node name="LeftArm" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0.5, 0.707107, 0, 0.707107, -0.707107, -0.866025, 0.5, 0.5, -0.2, 0.2, -0.1)
+mesh = SubResource("CylinderMesh_doll_arm")
+surface_material_override/0 = SubResource("StandardMaterial3D_doll")
+
+[node name="RightArm" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, -0.5, -0.707107, 0, 0.707107, -0.707107, 0.866025, 0.5, 0.5, 0.2, 0.2, 0.1)
+mesh = SubResource("CylinderMesh_doll_arm")
+surface_material_override/0 = SubResource("StandardMaterial3D_doll")
+
+[node name="LeftLeg" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.4, 0.05, -0.08)
+mesh = SubResource("CylinderMesh_doll_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_doll")
+
+[node name="RightLeg" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.4, 0.05, 0.08)
+mesh = SubResource("CylinderMesh_doll_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_doll")
+
+[node name="Key" parent="." instance=ExtResource("2_key")]
+transform = Transform3D(0.415825, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)

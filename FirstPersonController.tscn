@@ -1,0 +1,63 @@
+[gd_scene load_steps=8 format=3 uid="uid://b5u3m8k3nqc7w"]
+
+[ext_resource type="Script" path="res://FirstPersonController.gd" id="1_controller"]
+[ext_resource type="AudioStream" uid="uid://dfqwg3jyvbxs8" path="res://Audio/Player footstep sound.mp3" id="2_footstep"]
+[ext_resource type="AudioStream" uid="uid://cqyqm77l4rbw5" path="res://Audio/Gun sound.mp3" id="3_gun"]
+[ext_resource type="AudioStream" uid="uid://cq3o0exslmhyi" path="res://Audio/scare sound new.mp3" id="4_scare"]
+[ext_resource type="AudioStream" uid="uid://b2jgcl1wfhxlc" path="res://Audio/pick up gun sound.mp3" id="5_pickup"]
+[ext_resource type="AudioStream" uid="uid://6wt3pu6vfxrn" path="res://Audio/new ambience.mp3" id="6_ambient"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.5
+height = 2.0
+
+[node name="FirstPersonController" type="CharacterBody3D"]
+script = ExtResource("1_controller")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="UIOverlay" type="CanvasLayer" parent="."]
+
+[node name="BlackScreen" type="ColorRect" parent="UIOverlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+mouse_filter = 2
+
+[node name="BoundingBoxContainer" type="Control" parent="UIOverlay"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FootstepAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_footstep")
+volume_db = -5.0
+
+[node name="GunSoundAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_gun")
+volume_db = -5.0
+
+[node name="ScareAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_scare")
+volume_db = -3.0
+
+[node name="PickupGunAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_pickup")
+volume_db = -5.0
+
+[node name="AmbientAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ambient")
+volume_db = -10.0
+bus = &"Master"

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c3fwajicsiyop"
+path="res://.godot/imported/monster step.mp3-79a9da3791ad1c8f17626cadce2310e9.mp3str"
+
+[deps]
+
+source_file="res://Audio/monster step.mp3"
+dest_files=["res://.godot/imported/monster step.mp3-79a9da3791ad1c8f17626cadce2310e9.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

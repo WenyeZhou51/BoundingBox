@@ -1,0 +1,55 @@
+[gd_scene load_steps=9 format=3 uid="uid://bqx8kqy6yk8locked"]
+
+[ext_resource type="Script" path="res://LockedDoorPrefab.gd" id="1_locked_door"]
+[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8lock" path="res://LockPrefab.tscn" id="2_lock"]
+[ext_resource type="AudioStream" uid="uid://brykhcg5q6npd" path="res://Audio/door open sound.wav" id="3_door_sound"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_locked_door"]
+size = Vector3(2, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_locked_door"]
+size = Vector3(2, 3, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_locked_door"]
+albedo_color = Color(0.4, 0.2, 0.1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lock"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lock"]
+albedo_color = Color(0.8, 0.6, 0.2, 1)
+metallic = 0.8
+
+[node name="LockedDoorPrefab" type="StaticBody3D"]
+script = ExtResource("1_locked_door")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_locked_door")
+
+[node name="DoorPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DoorPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.5, 0)
+mesh = SubResource("BoxMesh_locked_door")
+surface_material_override/0 = SubResource("StandardMaterial3D_locked_door")
+
+[node name="LockHandle" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.8, 1.2, 0.15)
+mesh = SubResource("CylinderMesh_lock")
+surface_material_override/0 = SubResource("StandardMaterial3D_lock")
+
+[node name="Keyhole" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.8, 1.0, 0.12)
+mesh = SubResource("CylinderMesh_lock")
+surface_material_override/0 = SubResource("StandardMaterial3D_lock")
+
+[node name="LockPrefab" parent="." instance=ExtResource("2_lock")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.2, 0.15)
+
+[node name="DoorOpenAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_door_sound")
+volume_db = -25.0

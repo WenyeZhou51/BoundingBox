@@ -1,55 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://c4j8kqx6yk8xv"]
+[gd_scene load_steps=3 format=3 uid="uid://c4j8kqx6yk8xv"]
 
-[ext_resource type="Script" path="res://FirstPersonController.gd" id="1_0m0n0"]
-[ext_resource type="PackedScene" uid="uid://bxk8kqy6yk8xv" path="res://PlayerUI.tscn" id="2_ui"]
-[ext_resource type="AudioStream" path="res://Audio/Player footstep sound.mp3" id="3_footstep"]
-[ext_resource type="AudioStream" path="res://Audio/Gun sound.mp3" id="4_gun_sound"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1h2v3"]
+[ext_resource type="PackedScene" uid="uid://de7wk7ig1g8pi" path="res://PlayerUI.tscn" id="2_ui"]
+[ext_resource type="PackedScene" uid="uid://783gwo3dqpdk" path="res://EndSequence.tscn" id="8_end_sequence"]
 
 [node name="Player" type="Node"]
 
 [node name="PlayerUI" parent="." instance=ExtResource("2_ui")]
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport"]
-script = ExtResource("1_0m0n0")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_1h2v3")
-
-[node name="Camera3D" type="Camera3D" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-
-[node name="UIOverlay" type="Control" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-
-[node name="BlackScreen" type="ColorRect" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D/UIOverlay"]
+[node name="EndSequence" parent="PlayerUI" instance=ExtResource("8_end_sequence")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color(0, 0, 0, 1)
-visible = false
-mouse_filter = 2
-
-[node name="BoundingBoxContainer" type="Control" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D/UIOverlay"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-visible = false
-mouse_filter = 2
-
-[node name="FootstepAudio" type="AudioStreamPlayer" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
-stream = ExtResource("3_footstep")
-volume_db = 3.0
-autoplay = false
-
-[node name="GunSoundAudio" type="AudioStreamPlayer" parent="PlayerUI/ViewportFrame/SubViewportContainer/SubViewport/CharacterBody3D"]
-stream = ExtResource("4_gun_sound")
-autoplay = false

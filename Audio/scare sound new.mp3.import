@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bn8ls62je5tnf"
+path="res://.godot/imported/scare sound new.mp3-d6ac34564252a5d31de269f57ad58997.mp3str"
+
+[deps]
+
+source_file="res://Audio/scare sound new.mp3"
+dest_files=["res://.godot/imported/scare sound new.mp3-d6ac34564252a5d31de269f57ad58997.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

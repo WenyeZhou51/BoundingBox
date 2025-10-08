@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqx8kqy6yk8sink"]
+
+[ext_resource type="Script" path="res://SinkPrefab.gd" id="1_sink"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sink"]
+size = Vector3(0.8, 0.3, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sink"]
+size = Vector3(0.8, 0.3, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sink"]
+albedo_color = Color(0.7, 0.7, 0.8, 1)
+
+[node name="SinkPrefab" type="StaticBody3D"]
+script = ExtResource("1_sink")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_sink")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("BoxMesh_sink")
+surface_material_override/0 = SubResource("StandardMaterial3D_sink")
+

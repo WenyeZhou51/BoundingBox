@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqx8kqy6yk8stove"]
+
+[ext_resource type="Script" path="res://StovePrefab.gd" id="1_stove"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_stove"]
+size = Vector3(1.2, 0.9, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_stove"]
+size = Vector3(1.2, 0.9, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stove"]
+albedo_color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="StovePrefab" type="StaticBody3D"]
+script = ExtResource("1_stove")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_stove")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("BoxMesh_stove")
+surface_material_override/0 = SubResource("StandardMaterial3D_stove")
+

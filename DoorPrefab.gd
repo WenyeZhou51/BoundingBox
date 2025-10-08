@@ -6,13 +6,16 @@ var is_disappeared: bool = false
 var disappear_timer: Timer
 var collision_shape: CollisionShape3D
 var mesh_instance: MeshInstance3D
+var door_open_audio: AudioStreamPlayer
 
 func _ready():
 	object_label = "Door"
 	confidence = 0.95
 	is_interactable = true
+	interaction_text = "OPEN"
 	collision_shape = $CollisionShape3D
 	mesh_instance = $DoorPivot/MeshInstance3D  # The mesh is inside the DoorPivot
+	door_open_audio = $DoorOpenAudio
 	
 	# Create and configure disappear timer
 	disappear_timer = Timer.new()
@@ -29,6 +32,13 @@ func _ready():
 func interact():
 	if is_disappeared:
 		return  # Don't allow interaction while disappeared
+	
+	# Play door opening sound
+	if door_open_audio:
+		print("Playing door open sound...")
+		door_open_audio.play()
+	else:
+		print("Error: door_open_audio is null!")
 	
 	disappear_door()
 

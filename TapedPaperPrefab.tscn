@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://btp8kqy6yk8tape"]
+
+[ext_resource type="Script" path="res://TapedPaperPrefab.gd" id="1_taped_paper"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_paper"]
+size = Vector3(0.25, 0.35, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_paper"]
+size = Vector3(0.25, 0.35, 0.01)
+
+[node name="TapedPaperPrefab" type="StaticBody3D"]
+script = ExtResource("1_taped_paper")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_paper")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_paper")

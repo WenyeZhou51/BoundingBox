@@ -113,11 +113,12 @@ func get_player_reflection_info() -> Dictionary:
 
 # Handle right-click interaction to break the mirror
 func right_click_interact():
+	print("MirrorPrefab: right_click_interact() called!")
 	if is_broken:
 		print("Mirror is already broken!")
 		return
 	
-	print("Breaking mirror! Spawning 7 broken glass pieces...")
+	print("Breaking mirror! Spawning 10 broken glass pieces (3 straight down, 7 scattered)...")
 	
 	# Play mirror shatter sound
 	if mirror_shatter_audio:
@@ -130,6 +131,9 @@ func right_click_interact():
 	
 	# Transform this mirror into a mirror frame
 	transform_to_mirror_frame()
+	
+	# Trigger the end sequence
+	trigger_end_sequence()
 
 func spawn_broken_glass():
 	var mirror_pos = global_position
@@ -140,8 +144,8 @@ func spawn_broken_glass():
 	# Get reference to the FirstPersonController to add glass pieces to detected objects
 	var player = get_tree().get_first_node_in_group("player")
 	
-	# Spawn 7 pieces of broken glass
-	for i in range(7):
+	# Spawn 10 pieces of broken glass total: 3 fall straight down, 7 scatter around
+	for i in range(10):
 		var glass_piece = broken_glass_scene.instantiate()
 		
 		# Position glass pieces slightly in front of the mirror
@@ -151,20 +155,34 @@ func spawn_broken_glass():
 		
 		glass_piece.global_position = spawn_pos
 		
-		# Make glass pieces fall straight down (no horizontal velocity)
-		var downward_velocity = Vector3(0, -2.0, 0)  # Simple downward velocity
+		# First 3 pieces fall straight down, remaining 7 scatter around
+		var velocity: Vector3
+		if i < 3:
+			# Make first 3 pieces fall straight down (no horizontal velocity)
+			velocity = Vector3(0, -2.0, 0)
+			print("Spawned broken glass piece ", i + 1, " at ", spawn_pos, " falling straight down")
+		else:
+			# Make remaining 7 pieces scatter around with random horizontal velocity
+			var horizontal_speed = randf_range(1.0, 3.0)
+			var scatter_angle = randf_range(0, 2 * PI)  # Random direction
+			var horizontal_velocity = Vector3(
+				cos(scatter_angle) * horizontal_speed,
+				0,
+				sin(scatter_angle) * horizontal_speed
+			)
+			# Add downward velocity plus horizontal scattering
+			velocity = Vector3(0, -2.0, 0) + horizontal_velocity
+			print("Spawned broken glass piece ", i + 1, " at ", spawn_pos, " scattering with velocity ", velocity)
 		
 		# Add the glass piece to the scene
 		get_tree().current_scene.add_child(glass_piece)
 		
 		# Set the initial velocity
-		glass_piece.set_initial_velocity(downward_velocity)
+		glass_piece.set_initial_velocity(velocity)
 		
 		# Add to detected objects list so it shows up in vision mode
 		if player and player.has_method("add_detected_object"):
 			player.add_detected_object(glass_piece)
-		
-		print("Spawned broken glass piece ", i + 1, " at ", spawn_pos, " falling straight down")
 
 func transform_to_mirror_frame():
 	# Transform this mirror object into a mirror frame
@@ -174,3 +192,14 @@ func transform_to_mirror_frame():
 	
 	# Make sure it's visible in vision mode
 	print("Transformed mirror into Mirror Frame with 95% confidence")
+
+func trigger_end_sequence():
+	print("MirrorPrefab: trigger_end_sequence() called!")
+	# Find the player and trigger the end sequence
+	var player = get_tree().get_first_node_in_group("player")
+	print("MirrorPrefab: Found player: ", player)
+	if player and player.has_method("trigger_end_sequence"):
+		print("MirrorPrefab: Triggering end sequence through player...")
+		player.trigger_end_sequence()
+	else:
+		print("Error: Player not found or doesn't have trigger_end_sequence method!")

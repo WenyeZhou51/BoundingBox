@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://bed_prefab_001"]
+
+[ext_resource type="Script" path="res://BedPrefab.gd" id="1_bed"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bed_frame"]
+size = Vector3(2.0, 0.1, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bed_frame"]
+size = Vector3(2.0, 0.1, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mattress"]
+size = Vector3(1.9, 0.2, 0.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mattress"]
+size = Vector3(1.9, 0.2, 0.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pillow"]
+size = Vector3(0.4, 0.1, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pillow"]
+size = Vector3(0.4, 0.1, 0.3)
+
+[node name="BedPrefab" type="Node3D"]
+script = ExtResource("1_bed")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="Frame" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Frame"]
+shape = SubResource("BoxShape3D_bed_frame")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Frame"]
+mesh = SubResource("BoxMesh_bed_frame")
+
+[node name="Mattress" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Mattress"]
+shape = SubResource("BoxShape3D_mattress")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Mattress"]
+mesh = SubResource("BoxMesh_mattress")
+
+[node name="Pillow" type="Node3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.6, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Pillow"]
+shape = SubResource("BoxShape3D_pillow")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/Pillow"]
+mesh = SubResource("BoxMesh_pillow")

@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://shelf_prefab_001"]
+
+[ext_resource type="Script" path="res://ShelfPrefab.gd" id="1_shelf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shelf"]
+size = Vector3(2, 4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_shelf"]
+size = Vector3(2, 4, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shelf"]
+albedo_color = Color(0.5, 0.4, 0.3, 1)
+
+[node name="ShelfPrefab" type="StaticBody3D"]
+script = ExtResource("1_shelf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("BoxShape3D_shelf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("BoxMesh_shelf")
+surface_material_override/0 = SubResource("StandardMaterial3D_shelf")
+

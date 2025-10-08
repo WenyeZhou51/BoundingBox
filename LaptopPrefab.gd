@@ -128,7 +128,7 @@ func create_ui_elements():
 	content_label.position = Vector2(20, 20)
 	content_label.size = Vector2(560, 320)
 	content_label.bbcode_enabled = true
-	content_label.text = "Electronic entity connected. Extracting logs...\ntesting\ntesting\ntesting\ntesting\ntesting\ntesting"
+	content_label.text = "It\n\nThings are silent outside. I don't know where they went. I am going out to search. If anyone reads this, if anyone is in dire danger, I have a revolver in the safe with my room number as the code.\n\nCasen Patterson"
 	content_label.visible = false
 	
 	# Style the text to match game theme (green text on black background)

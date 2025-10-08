@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://bqx8kqy6yk8lock"]
+
+[ext_resource type="Script" path="res://LockPrefab.gd" id="1_lock"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lock"]
+size = Vector3(0.15, 0.1, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lock"]
+size = Vector3(0.15, 0.1, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lock"]
+albedo_color = Color(0.8, 0.6, 0.2, 1)
+metallic = 0.8
+roughness = 0.2
+
+[node name="LockPrefab" type="StaticBody3D"]
+script = ExtResource("1_lock")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("BoxShape3D_lock")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+mesh = SubResource("BoxMesh_lock")
+surface_material_override/0 = SubResource("StandardMaterial3D_lock")

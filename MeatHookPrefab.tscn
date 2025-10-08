@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqx8kqy6yk8hook"]
+
+[ext_resource type="Script" path="res://MeatHookPrefab.gd" id="1_hook"]
+
+[sub_resource type="TorusShape3D" id="TorusShape3D_hook"]
+inner_radius = 0.05
+outer_radius = 0.1
+
+[sub_resource type="TorusMesh" id="TorusMesh_hook"]
+inner_radius = 0.05
+outer_radius = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hook"]
+albedo_color = Color(0.3, 0.3, 0.3, 1)
+metallic = 0.8
+
+[node name="MeatHookPrefab" type="StaticBody3D"]
+script = ExtResource("1_hook")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("TorusShape3D_hook")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_hook")
+surface_material_override/0 = SubResource("StandardMaterial3D_hook")
+
+
