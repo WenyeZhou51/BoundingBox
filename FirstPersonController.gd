@@ -62,6 +62,8 @@ var reflection_was_active: bool = false
 var current_weapon: String = ""
 var weapon_ui_label: Label
 var shootable_objects_in_range: Array[BasePrefab] = []
+var weapon_cooldown: float = 0.0
+var weapon_cooldown_duration: float = 0.5
 
 func _ready():
 	# Add player to group for easy finding by other scripts
@@ -205,6 +207,10 @@ func _physics_process(delta):
 			var contact_point = collision.get_position() - collider.global_position
 			collider.apply_impulse(push_force, contact_point)
 	
+	# Update weapon cooldown timer
+	if weapon_cooldown > 0.0:
+		weapon_cooldown -= delta
+	
 	# Update confidence fluctuations timer
 	fluctuation_timer += delta
 	if fluctuation_timer >= fluctuation_update_interval:
@@ -214,7 +220,6 @@ func _physics_process(delta):
 	# Update bounding boxes in vision mode
 	if vision_mode:
 		update_interactable_objects()  # Update interactables for yellow highlighting
-		update_shootable_objects()  # Update shootable objects for red highlighting
 		update_bounding_boxes()
 	else:
 		# In normal mode, hide any bounding boxes
@@ -358,8 +363,7 @@ func update_bounding_boxes():
 		if bbox != Rect2():
 			visible_objects[obj] = true
 			var is_interactable_in_range = obj in interactable_objects_in_range
-			var is_shootable_in_range = obj in shootable_objects_in_range
-			update_or_create_bounding_box_ui(obj, bbox, is_interactable_in_range, is_shootable_in_range)
+			update_or_create_bounding_box_ui(obj, bbox, is_interactable_in_range)
 	
 	# Remove UI for objects that are no longer visible
 	for obj in cached_bounding_boxes.keys():
@@ -506,15 +510,12 @@ func is_object_center_in_line_of_sight(obj: BasePrefab) -> bool:
 	return false
 
 # OPTIMIZED: Update existing UI or create new (avoids recreation)
-func update_or_create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interactable_in_range: bool = false, is_shootable_in_range: bool = false):
+func update_or_create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interactable_in_range: bool = false):
 	# Choose color based on priority
 	var border_color = Color.GREEN
 	var label_bg_color = Color.GREEN
 	
-	if is_shootable_in_range:
-		border_color = Color.RED
-		label_bg_color = Color.RED
-	elif is_interactable_in_range:
+	if is_interactable_in_range:
 		border_color = Color.YELLOW
 		label_bg_color = Color.YELLOW
 	
@@ -523,9 +524,7 @@ func update_or_create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interacta
 	var display_confidence = clamp(obj.confidence + fluctuation, 0.0, 1.0)
 	var label_text = obj.object_label + ": " + str(round(display_confidence * 100) / 100.0)
 	
-	if is_shootable_in_range:
-		label_text += " [SHOOT]"
-	elif is_interactable_in_range:
+	if is_interactable_in_range:
 		label_text += " [" + obj.interaction_text + "]"
 	
 	# Check if UI already exists for this object
@@ -619,8 +618,8 @@ func remove_bounding_box_ui(obj):
 		cached_bounding_boxes.erase(obj)
 
 # Legacy function kept for compatibility
-func create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interactable_in_range: bool = false, is_shootable_in_range: bool = false):
-	update_or_create_bounding_box_ui(obj, bbox, is_interactable_in_range, is_shootable_in_range)
+func create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interactable_in_range: bool = false):
+	update_or_create_bounding_box_ui(obj, bbox, is_interactable_in_range)
 
 # Returns array of border ColorRects for caching
 func create_hollow_border_array(container: Control, box_size: Vector2, color: Color = Color.GREEN) -> Array:
@@ -770,36 +769,6 @@ func update_interactable_highlighting():
 	# This will be handled by update_bounding_boxes() which calls create_bounding_box_ui
 	# with the is_interactable_in_range parameter
 
-# Update list of shootable objects in range using raycast
-func update_shootable_objects():
-	shootable_objects_in_range.clear()
-	
-	# Only check for shootable objects if player has a weapon
-	if current_weapon == "":
-		return
-	
-	# Use the same raycast logic as handle_weapon_firing() for consistency
-	var space_state = get_world_3d().direct_space_state
-	var camera_pos = camera.global_position
-	var camera_forward = -camera.global_transform.basis.z
-	var ray_end = camera_pos + camera_forward * max_detection_distance
-	
-	var query = PhysicsRayQueryParameters3D.create(camera_pos, ray_end)
-	query.exclude = [self]
-	
-	var result = space_state.intersect_ray(query)
-	
-	if not result.is_empty():
-		var hit_object = result.collider
-		
-		# Find the BasePrefab parent of the hit object
-		var prefab = find_prefab_parent(hit_object)
-		if prefab and prefab.is_shootable and prefab.should_be_visible_in_vision_mode():
-			shootable_objects_in_range.append(prefab)
-	
-	# Debug print when we have shootables in range
-	if vision_mode and shootable_objects_in_range.size() > 0:
-		print("Found ", shootable_objects_in_range.size(), " shootable(s) in range")
 
 # Check for mirror reflections and create bounding boxes for player reflections
 func check_mirror_reflections():
@@ -1017,35 +986,64 @@ func pickup_weapon(weapon_name: String):
 
 # Handle weapon firing - shoots shootable objects
 func handle_weapon_firing():
+	# Check cooldown
+	if weapon_cooldown > 0.0:
+		print("Weapon on cooldown: ", weapon_cooldown, " seconds remaining")
+		return
+	
 	# Play gun sound
 	if gun_sound_audio:
 		gun_sound_audio.play()
 	
-	# Cast a ray from the camera forward to detect what the player is shooting at
-	var space_state = get_world_3d().direct_space_state
-	var camera_pos = camera.global_position
-	var camera_forward = -camera.global_transform.basis.z
-	var ray_end = camera_pos + camera_forward * max_detection_distance
+	# Start the cooldown
+	weapon_cooldown = weapon_cooldown_duration
 	
-	var query = PhysicsRayQueryParameters3D.create(camera_pos, ray_end)
-	query.exclude = [self]
+	# Find the first shootable object within the center 30% of the screen
+	var viewport_size = get_viewport().get_visible_rect().size
+	var center_region_size = viewport_size * 0.3  # 30% of screen size
+	var center_region_min = (viewport_size - center_region_size) / 2.0
+	var center_region_max = center_region_min + center_region_size
 	
-	var result = space_state.intersect_ray(query)
+	var closest_shootable: BasePrefab = null
+	var closest_distance: float = INF
 	
-	if not result.is_empty():
-		var hit_object = result.collider
+	# Check all detected objects to find shootable ones in the center region
+	for obj in detected_objects:
+		if obj == null or !is_instance_valid(obj):
+			continue
 		
-		# Find the BasePrefab parent of the hit object
-		var prefab = find_prefab_parent(hit_object)
-		if prefab and prefab.is_shootable:
-			print("Shot shootable object: ", prefab.object_label)
-			# Call the right_click_interact method on shootable objects
-			if prefab.has_method("right_click_interact"):
-				prefab.right_click_interact()
-		else:
-			print("Hit non-shootable object")
+		# Skip if not shootable
+		if not obj.is_shootable:
+			continue
+		
+		# Skip if not visible
+		if not obj.should_be_visible_in_vision_mode():
+			continue
+		
+		# Check if object center is in line of sight
+		if not is_object_center_in_line_of_sight(obj):
+			continue
+		
+		# Get object center in screen space
+		var obj_center = get_object_center_cached(obj)
+		var screen_pos = camera.unproject_position(obj_center)
+		
+		# Check if in center region (30% of screen)
+		if screen_pos.x >= center_region_min.x and screen_pos.x <= center_region_max.x and \
+		   screen_pos.y >= center_region_min.y and screen_pos.y <= center_region_max.y:
+			# Check distance to find the closest one
+			var distance = camera.global_position.distance_to(obj_center)
+			if distance < closest_distance:
+				closest_distance = distance
+				closest_shootable = obj
+	
+	# Shoot the closest shootable object
+	if closest_shootable:
+		print("Shot shootable object: ", closest_shootable.object_label)
+		if closest_shootable.has_method("right_click_interact"):
+			closest_shootable.right_click_interact()
 	else:
-		print("No object in shooting range")
+		print("No shootable object in center of screen")
 
 # Update weapon UI to show if player has weapon
 func update_weapon_ui():
@@ -1084,11 +1082,24 @@ func setup_audio_looping():
 # Start ambient audio (called when level starts, after intro)
 func start_ambient_audio():
 	if ambient_audio:
-		if not ambient_audio.playing:
-			ambient_audio.play()
-			print("Started playing ambient audio at volume: ", ambient_audio.volume_db, " dB")
+		print("=== Starting Ambient Audio ===")
+		print("  Node: ", ambient_audio)
+		print("  Stream: ", ambient_audio.stream)
+		print("  Volume: ", ambient_audio.volume_db, " dB")
+		
+		if ambient_audio.stream:
+			# Ensure loop is set for MP3
+			if ambient_audio.stream is AudioStreamMP3:
+				ambient_audio.stream.loop = true
+				print("  MP3 loop enabled: ", ambient_audio.stream.loop)
+			
+			if not ambient_audio.playing:
+				ambient_audio.play()
+				print("  ✓ Started playing ambient audio")
+			else:
+				print("  Ambient audio already playing")
 		else:
-			print("Ambient audio already playing")
+			print("  ERROR: Ambient audio stream is null!")
 	else:
 		print("ERROR: AmbientAudio node not found!")
 

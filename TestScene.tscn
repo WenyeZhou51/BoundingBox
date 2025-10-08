@@ -1,48 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://ceiub3rnqc0x8"]
+[gd_scene load_steps=2 format=3 uid="uid://ceiub3rnqc0x8"]
 
 [ext_resource type="PackedScene" uid="uid://c4j8kqx6yk8xv" path="res://Player.tscn" id="1_player"]
-[ext_resource type="PackedScene" uid="uid://c8osnxx8ti0gr" path="res://LivingRoomScene.tscn" id="2_684r3"]
-[ext_resource type="PackedScene" uid="uid://bw5qhpg0akq5" path="res://HallwayScene.tscn" id="3_jgplj"]
-[ext_resource type="PackedScene" uid="uid://ej6pqkyk3els" path="res://StudyScene.tscn" id="4_yv1im"]
-[ext_resource type="PackedScene" uid="uid://dyhw7i2ywupfo" path="res://StairwellScene.tscn" id="5_dmwqt"]
-[ext_resource type="PackedScene" uid="uid://bu1rwlhnbydjd" path="res://KitchenScene.tscn" id="6_dj7lh"]
-[ext_resource type="PackedScene" uid="uid://bu1rwlcvu1vjh" path="res://FreezerScene.tscn" id="7_o2g6k"]
-[ext_resource type="PackedScene" uid="uid://0p4v1wxu7oqr" path="res://DormHallwayScene.tscn" id="8_sldg2"]
-
-[sub_resource type="Environment" id="Environment_1"]
-background_mode = 1
-background_color = Color(0.5, 0.7, 1, 1)
-ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 0.3
 
 [node name="TestScene" type="Node3D"]
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
-script = null
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_1")
-
-[node name="LivingRoomScene" parent="." instance=ExtResource("2_684r3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0310364, 0, -1.96951)
-
-[node name="HallwayScene" parent="." instance=ExtResource("3_jgplj")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -11.1793, 0, -1.93482)
-
-[node name="StudyScene" parent="." instance=ExtResource("4_yv1im")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -21.2638, 0, -1.05069)
-
-[node name="StairwellScene" parent="." instance=ExtResource("5_dmwqt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.3002, -8.18071, 6.71976)
-
-[node name="KitchenScene" parent="." instance=ExtResource("6_dj7lh")]
-transform = Transform3D(-0.025828, 0, 0.999666, 0, 1, 0, -0.999666, 0, -0.025828, -21.6335, 0.220967, -9.34007)
-
-[node name="FreezerScene" parent="." instance=ExtResource("7_o2g6k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.0027, 0.265037, -18.3977)
-
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-
-[node name="DormHallwayScene" parent="." instance=ExtResource("8_sldg2")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -20.5591, -8.23431, -9.55644)

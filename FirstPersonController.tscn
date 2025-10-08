@@ -5,7 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://cqyqm77l4rbw5" path="res://Audio/Gun sound.mp3" id="3_gun"]
 [ext_resource type="AudioStream" uid="uid://cq3o0exslmhyi" path="res://Audio/scare sound new.mp3" id="4_scare"]
 [ext_resource type="AudioStream" uid="uid://b2jgcl1wfhxlc" path="res://Audio/pick up gun sound.mp3" id="5_pickup"]
-[ext_resource type="AudioStream" uid="uid://6wt3pu6vfxrn" path="res://Audio/new ambience.mp3" id="6_ambient"]
+[ext_resource type="AudioStream" uid="uid://df57gak0bmf6j" path="res://Audio/new ambience.mp3" id="6_ambient"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.5
@@ -59,5 +59,5 @@ volume_db = -5.0
 
 [node name="AmbientAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_ambient")
-volume_db = -10.0
+volume_db = 5.0
 bus = &"Master"
