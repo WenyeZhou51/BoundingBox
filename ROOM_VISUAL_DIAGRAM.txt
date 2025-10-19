@@ -1,0 +1,199 @@
+═══════════════════════════════════════════════════════════════
+    L-SHAPED STORAGE CONNECTOR - TOP-DOWN VIEW
+═══════════════════════════════════════════════════════════════
+
+Legend:
+  ═ = Wall (solid, blocks player)
+  ║ = Wall (vertical)
+  ▓ = Floor (walkable)
+  ░ = Overlap area (both segments)
+  D = Door (openable)
+  B = Box stack
+  * = Debris pile
+  W = Watch location
+  → = Player path direction
+
+═══════════════════════════════════════════════════════════════
+SEGMENT 1 (Horizontal East-West Corridor)
+═══════════════════════════════════════════════════════════════
+
+Z-axis
+  ↑
+  │
+  │     X = 0   1   2   3   4   5   6   7   8   9  10  11  12
+  │   
+ +2   ═════════════════════════════════════════════════════
+  │   ║ * * ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ * * ║     ║
+ +1   ║   ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓   ║     ║
+  0   D ▓ ▓ B ▓ ▓ ▓ ▓ ▓ B ▓ ▓ ▓ ░ ░ ░ ░ ░ ░ ░ ░ ║ ▓ ▓ ║
+      │ →→→→→→→→→→→→→→→→→→→→→→→↓                   ║     ║
+ -1   ║   ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ░ ░ ░ ░ ░ ░ ░   ║     ║
+ -2   ║ * * ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ░ ░ ░ ░ ░ * *   ║     ║
+      ═════════════════════════════════════════════════════
+      │                                             │
+      └─ West Door (from Lab)                      └─ Corner Wall
+         at X=0, Z=0                                   at X=10.1
+
+Notes for Segment 1:
+- B at X=2, Z=-0.5 = BoxStack1 (has Debris + Watch!)
+- B at X=7, Z=0.5 = BoxStack2
+- * = Corner debris (8 small piles)
+- Walkable width: 4 units (Z from -2 to +2)
+- Length: 10 units (X from 0 to 10)
+
+═══════════════════════════════════════════════════════════════
+SEGMENT 2 (Vertical North-South Corridor)
+═══════════════════════════════════════════════════════════════
+
+Z-axis
+  ↑
+  │
+  │     X = 7   8   9  10  11  12
+  │   
+ 12   ══════════════════════════
+  │   ║ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ║
+ 11   ║ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ * * ▓ ║
+ 10   ║ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ D ← Exit to Freezer
+      ║                       ↑
+  9   ║ ▓ ▓ ▓ B ▓ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║                       ║
+  8   ║ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║                       ║
+  7   ║ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║                       ║
+  6   ║ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║                       ║
+  5   ║ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║                       ║
+  4   ║ ▓ ▓ ▓ ▓ ▓ ▓ B ▓ ▓ ▓ ▓ ║
+      ║                       ║
+  3   ║ ▓ ▓ * * ▓ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║         ↑             ║
+  2   ║ ░ ░ ░ ░ ║ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║         └─ Player enters from Segment 1
+  1   ║ ░ ░ ░ ░ ║ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ║         │             ║
+  0   ║ ░ ░ ░ ░ ║ ▓ ▓ ▓ ▓ ▓ ▓ ║
+      ══════════╝             ║
+
+Notes for Segment 2:
+- B at X=9, Z=9 = BoxStack3
+- B at X=11, Z=4 = BoxStack4
+- * = Corner debris
+- Walkable width: 4 units (X from 8 to 12)
+- Length: 10 units (Z from 2 to 12)
+- Corner wall at X=10.1 (shown as ║ on left)
+
+═══════════════════════════════════════════════════════════════
+COMBINED VIEW (How they connect)
+═══════════════════════════════════════════════════════════════
+
+              LAB ROOM
+                 │
+                 │ East door at (-25.19, -0.14, -1.11)
+                 ▼
+         ┌───────D──────────┐
+         │                  │
+         │   SEGMENT 1      │
+         │   (Horizontal)   │
+         │                  │
+         │                  │
+         └────────┬─────────┘
+                  │
+                  │ Turn 90° south
+                  ▼
+              ┌───┴───┐
+              │       │
+              │  SEG  │
+              │   2   │
+              │ (Vert)│
+              │       │
+              │       │
+              └───┬───┘
+                  │
+                  │ East door at (-13.19, -0.14, 8.89)
+                  ▼
+             FREEZER ROOM
+
+═══════════════════════════════════════════════════════════════
+BOX STACK DETAILS
+═══════════════════════════════════════════════════════════════
+
+BoxStack1 at (2, 0, -0.5):
+    Height
+    1.15 m  ← WATCH (confidence 0.9) ★★★★★
+    0.90 m  ← DEBRIS (confidence 0.4) ★★
+    0.60 m  ← Box3
+    0.30 m  ← Box2
+    0.00 m  ← Box1
+    ═════════ Floor
+
+BoxStack2 at (7, 0, 0.5):
+    0.30 m  ← Box2
+    0.00 m  ← Box1
+    ═════════ Floor
+
+BoxStack3 at (9, 0, 9):
+    0.60 m  ← Box3
+    0.30 m  ← Box2
+    0.00 m  ← Box1
+    ═════════ Floor
+
+BoxStack4 at (11, 0, 4):
+    0.30 m  ← Box2
+    0.00 m  ← Box1
+    ═════════ Floor
+
+═══════════════════════════════════════════════════════════════
+PLAYER WALKING PATH (Step by Step)
+═══════════════════════════════════════════════════════════════
+
+START: Lab room at (-30.19, -0.14, -1.11)
+  ↓
+  ↓ Walk EAST
+  ↓
+STEP 1: Lab east door at (-25.19, -0.14, -1.11)
+  ↓
+  ↓ Open door, enter connector
+  ↓
+STEP 2: Connector west door at (-25.19, -0.14, -1.11) ✅ ALIGNED
+  ↓
+  ↓ Walk EAST through Segment 1
+  ↓ (pass BoxStack1 at X=2)
+  ↓ (pass BoxStack2 at X=7)
+  ↓
+STEP 3: Reach turn point at X≈9, Z≈0
+  ↓
+  ↓ Turn 90° to face SOUTH
+  ↓
+STEP 4: Enter Segment 2, walk SOUTH
+  ↓
+  ↓ (pass BoxStack4 at Z=4)
+  ↓ (pass BoxStack3 at Z=9)
+  ↓
+STEP 5: Reach connector east door at (12, 0, 10)
+        World position: (-13.19, -0.14, 8.89)
+  ↓
+  ↓ Open door, enter freezer
+  ↓
+STEP 6: Freezer west door at (-13.19, -0.14, 8.89) ✅ ALIGNED
+  ↓
+  ↓ Walk into Freezer
+  ↓
+END: Freezer room at (-7.19, -0.14, 8.89)
+
+═══════════════════════════════════════════════════════════════
+WALL COLLISION MAP (What stops the player where)
+═══════════════════════════════════════════════════════════════
+
+WallNorth1 at Z=-2.1: Stops player from going north in Segment 1
+WallSouth1 at Z=+2.1: Stops player from going south in Segment 1
+WallWest2 at X=7.9: Stops player from going west in Segment 2
+WallEast2 at X=12.1: Stops player from going east in Segment 2 (except at door)
+WallNorth2 at Z=12.1: Stops player from going north past Segment 2
+WallCornerEast at X=10.1: Stops player from going east at turn, forces south turn
+
+═══════════════════════════════════════════════════════════════
+END OF VISUAL DIAGRAM
+═══════════════════════════════════════════════════════════════
+

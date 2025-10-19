@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://cq3o0exslmhyi" path="res://Audio/scare sound new.mp3" id="4_scare"]
 [ext_resource type="AudioStream" uid="uid://b2jgcl1wfhxlc" path="res://Audio/pick up gun sound.mp3" id="5_pickup"]
 [ext_resource type="AudioStream" uid="uid://df57gak0bmf6j" path="res://Audio/new ambience.mp3" id="6_ambient"]
+[ext_resource type="AudioStream" uid="uid://cttwrlnrxiygp" path="res://Audio/Todolist.wav" id="7_todolist"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.5
@@ -61,3 +62,7 @@ volume_db = -5.0
 stream = ExtResource("6_ambient")
 volume_db = 5.0
 bus = &"Master"
+
+[node name="TodolistAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_todolist")
+volume_db = 0.0

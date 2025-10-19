@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
-@export var speed: float = 5.0
-@export var jump_velocity: float = 4.5
+@export var speed: float = 12.5
+@export var jump_velocity: float = 2.25
 @export var sensitivity: float = 0.002
 @export var max_detection_distance: float = 50.0
 @export var interaction_distance: float = 3.0  # Reasonable interaction distance
@@ -32,17 +32,19 @@ var raycast_update_interval: int = 3  # Update raycasts every N frames
 @onready var scare_audio: AudioStreamPlayer = $ScareAudio
 @onready var pickup_gun_audio: AudioStreamPlayer = $PickupGunAudio
 @onready var ambient_audio: AudioStreamPlayer = $AmbientAudio
+@onready var todolist_audio: AudioStreamPlayer = $TodolistAudio
 
 # Reference to the intro sequence and end sequence
 var intro_sequence: Control
 var end_sequence: Control
 var game_started: bool = false
+var flash_message_label: Label
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var vision_mode: bool = false
-var detected_objects: Array[BasePrefab] = []
-var interactable_objects_in_range: Array[BasePrefab] = []
+var detected_objects: Array = []  # Can be BasePrefab or objects with BasePrefab-like properties
+var interactable_objects_in_range: Array = []  # Can be BasePrefab or objects with BasePrefab-like properties
 
 # Confidence fluctuation system
 var confidence_fluctuations: Dictionary = {}  # Store fluctuations for each object
@@ -64,6 +66,20 @@ var weapon_ui_label: Label
 var shootable_objects_in_range: Array[BasePrefab] = []
 var weapon_cooldown: float = 0.0
 var weapon_cooldown_duration: float = 0.5
+
+# Battery saving mode
+var battery_saving_mode: bool = false
+var battery_low_label: Label
+var battery_flash_timer: float = 0.0
+var battery_flash_duration: float = 2.0  # Flash for 2 seconds
+var battery_flash_active: bool = false
+
+# Access card system
+var has_kitchen_access_card: bool = false
+
+# Trash pickup system
+var held_trash = null  # Currently held trash object
+var trash_hold_offset: Vector3 = Vector3(0.5, -0.3, -1.5)  # Position relative to camera
 
 func _ready():
 	# Add player to group for easy finding by other scripts
@@ -100,8 +116,15 @@ func _ready():
 	
 	# Initialize weapon UI
 	update_weapon_ui()
+	
+	# Setup battery low UI
+	setup_battery_low_ui()
+	
+	# Setup flash message label
+	setup_flash_message_label()
 
 func _on_intro_complete():
+	# Start the game first so player can move and see
 	game_started = true
 	# Now capture the mouse cursor and enable bounding box vision mode
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -113,6 +136,47 @@ func _on_intro_complete():
 	
 	# Start ambient audio now that the level has started
 	start_ambient_audio()
+	
+	# Now play the start sequence (audio + flash message) while player can move
+	play_start_sequence()
+
+func play_start_sequence():
+	# Play the todolist audio
+	if todolist_audio:
+		print("Playing todolist audio...")
+		todolist_audio.play()
+		
+		# Wait for the audio to finish playing
+		await todolist_audio.finished
+		
+		# Flash the message "CLEAN OUT THE ROOMS"
+		flash_bold_message()
+	else:
+		print("Warning: Todolist audio not found!")
+
+func flash_bold_message():
+	if not flash_message_label:
+		print("Warning: Flash message label not found!")
+		return
+	
+	# Set the message text in bold with large font
+	flash_message_label.text = "CLEAN OUT THE ROOMS"
+	flash_message_label.add_theme_font_size_override("font_size", 60)
+	
+	# Make it bold by adding outline
+	flash_message_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	flash_message_label.add_theme_constant_override("outline_size", 8)
+	
+	print("Flashing message: CLEAN OUT THE ROOMS")
+	
+	# Flash the message 3 times (on/off/on/off/on/off)
+	for i in range(3):
+		flash_message_label.visible = true
+		await get_tree().create_timer(0.5).timeout
+		flash_message_label.visible = false
+		await get_tree().create_timer(0.3).timeout
+	
+	print("Flash sequence complete")
 
 func _input(event):
 	# Don't handle input until game has started
@@ -132,8 +196,17 @@ func _input(event):
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	# Toggle vision mode with F key
+	# F key: Pickup/drop trash
 	if event is InputEventKey and event.keycode == KEY_F and event.pressed:
+		# If holding trash, drop it
+		if held_trash:
+			drop_trash()
+		else:
+			# Try to pick up trash
+			try_pickup_trash()
+	
+	# 8 key: Toggle vision mode
+	if event is InputEventKey and event.keycode == KEY_8 and event.pressed:
 		toggle_vision_mode()
 	
 	# Handle mouse click for interaction
@@ -211,11 +284,28 @@ func _physics_process(delta):
 	if weapon_cooldown > 0.0:
 		weapon_cooldown -= delta
 	
+	# Update battery flash timer
+	if battery_flash_active:
+		battery_flash_timer += delta
+		# Flash the label on and off
+		if battery_low_label:
+			battery_low_label.visible = (int(battery_flash_timer * 4) % 2 == 0)
+		
+		# Stop flashing after duration
+		if battery_flash_timer >= battery_flash_duration:
+			battery_flash_active = false
+			if battery_low_label:
+				battery_low_label.visible = false
+	
 	# Update confidence fluctuations timer
 	fluctuation_timer += delta
 	if fluctuation_timer >= fluctuation_update_interval:
 		fluctuation_timer = 0.0
 		update_confidence_fluctuations()
+	
+	# Update held trash position if carrying something
+	if held_trash:
+		update_held_trash_position()
 	
 	# Update bounding boxes in vision mode
 	if vision_mode:
@@ -248,7 +338,7 @@ func find_all_prefabs():
 		print("  - ", obj.object_label, " (Interactable: ", obj.is_interactable, ", Mirror: ", is_mirror, ")")
 
 # Cache AABB for an object to avoid recalculating every frame
-func cache_object_aabb(obj: BasePrefab):
+func cache_object_aabb(obj):
 	if obj == null or !is_instance_valid(obj):
 		return
 	
@@ -260,7 +350,7 @@ func cache_object_aabb(obj: BasePrefab):
 		}
 
 # Calculate AABB once (used for caching)
-func calculate_object_aabb(obj: BasePrefab) -> AABB:
+func calculate_object_aabb(obj) -> AABB:
 	var aabb = AABB()
 	var mesh_instances = []
 	_find_mesh_instances_recursive(obj, mesh_instances)
@@ -284,15 +374,24 @@ func calculate_object_aabb(obj: BasePrefab) -> AABB:
 	return aabb
 
 # Add a new detected object to the list (used when spawning broken glass)
-func add_detected_object(obj: BasePrefab):
+func add_detected_object(obj):
 	if obj not in detected_objects:
 		detected_objects.append(obj)
 		cache_object_aabb(obj)  # Cache AABB for new object
 		print("Added new detected object: ", obj.object_label)
 
 func _find_prefabs_recursive(node: Node):
+	# Detect BasePrefab objects OR objects with BasePrefab-like properties
+	var is_prefab_like = false
+	
 	if node is BasePrefab:
-		detected_objects.append(node as BasePrefab)
+		is_prefab_like = true
+	elif node.get("object_label") != null and node.get("confidence") != null:
+		# Duck-typing: if it has object_label and confidence, treat it like a prefab
+		is_prefab_like = true
+	
+	if is_prefab_like:
+		detected_objects.append(node)
 	
 	for child in node.get_children():
 		_find_prefabs_recursive(child)
@@ -371,13 +470,26 @@ func update_bounding_boxes():
 			remove_bounding_box_ui(obj)
 
 # OPTIMIZED: Use cached AABB instead of recalculating
-func calculate_screen_bounding_box_cached(obj: BasePrefab) -> Rect2:
-	if obj not in cached_aabbs:
-		return Rect2()
-	
-	var aabb = cached_aabbs[obj].aabb
-	if aabb.size == Vector3.ZERO:
-		return Rect2()
+func calculate_screen_bounding_box_cached(obj) -> Rect2:
+	# For RigidBody3D objects (physics objects), recalculate AABB every frame since they can move
+	var aabb: AABB
+	if obj is RigidBody3D:
+		aabb = calculate_object_aabb(obj)
+		if aabb.size == Vector3.ZERO:
+			return Rect2()
+		# Update the cache with the new AABB
+		cached_aabbs[obj] = {
+			"aabb": aabb,
+			"center": aabb.get_center()
+		}
+	else:
+		# For static objects, use cached AABB
+		if obj not in cached_aabbs:
+			return Rect2()
+		
+		aabb = cached_aabbs[obj].aabb
+		if aabb.size == Vector3.ZERO:
+			return Rect2()
 	
 	# Get all 8 corners of the AABB
 	var corners = [
@@ -416,18 +528,20 @@ func calculate_screen_bounding_box_cached(obj: BasePrefab) -> Rect2:
 	return Rect2(min_screen, max_screen - min_screen)
 
 # Legacy function kept for compatibility (now just calls cached version)
-func calculate_screen_bounding_box(obj: BasePrefab) -> Rect2:
+func calculate_screen_bounding_box(obj) -> Rect2:
 	return calculate_screen_bounding_box_cached(obj)
 
 # Get object center from cache (avoids recalculation)
-func get_object_center_cached(obj: BasePrefab) -> Vector3:
+func get_object_center_cached(obj) -> Vector3:
+	# For RigidBody3D objects, the cache is updated every frame in calculate_screen_bounding_box_cached
+	# So we can safely use the cached center (which will be fresh)
 	if obj in cached_aabbs:
 		return cached_aabbs[obj].center
 	# Fallback to object position if not cached
 	return obj.global_position
 
 # Cached raycast visibility check (only updates every N frames)
-func is_object_visible_cached(obj: BasePrefab) -> bool:
+func is_object_visible_cached(obj) -> bool:
 	# Check if we have a recent cached result
 	if obj in raycast_cache:
 		var cache_entry = raycast_cache[obj]
@@ -443,7 +557,7 @@ func is_object_visible_cached(obj: BasePrefab) -> bool:
 	}
 	return is_visible
 
-func get_object_aabb(obj: BasePrefab) -> AABB:
+func get_object_aabb(obj) -> AABB:
 	var aabb = AABB()
 	
 	# Find all MeshInstance3D nodes in the object
@@ -475,11 +589,11 @@ func _find_mesh_instances_recursive(node: Node, mesh_instances: Array):
 	for child in node.get_children():
 		_find_mesh_instances_recursive(child, mesh_instances)
 
-func get_object_center(obj: BasePrefab) -> Vector3:
+func get_object_center(obj) -> Vector3:
 	# Use cached version for better performance
 	return get_object_center_cached(obj)
 
-func is_object_center_in_line_of_sight(obj: BasePrefab) -> bool:
+func is_object_center_in_line_of_sight(obj) -> bool:
 	var camera_pos = camera.global_position
 	var object_center = get_object_center(obj)
 	
@@ -510,7 +624,7 @@ func is_object_center_in_line_of_sight(obj: BasePrefab) -> bool:
 	return false
 
 # OPTIMIZED: Update existing UI or create new (avoids recreation)
-func update_or_create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interactable_in_range: bool = false):
+func update_or_create_bounding_box_ui(obj, bbox: Rect2, is_interactable_in_range: bool = false):
 	# Choose color based on priority
 	var border_color = Color.GREEN
 	var label_bg_color = Color.GREEN
@@ -519,13 +633,15 @@ func update_or_create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interacta
 		border_color = Color.YELLOW
 		label_bg_color = Color.YELLOW
 	
-	# Prepare label text
-	var fluctuation = confidence_fluctuations.get(obj, 0.0)
-	var display_confidence = clamp(obj.confidence + fluctuation, 0.0, 1.0)
-	var label_text = obj.object_label + ": " + str(round(display_confidence * 100) / 100.0)
-	
-	if is_interactable_in_range:
-		label_text += " [" + obj.interaction_text + "]"
+	# Prepare label text (empty if battery saving mode)
+	var label_text = ""
+	if not battery_saving_mode:
+		var fluctuation = confidence_fluctuations.get(obj, 0.0)
+		var display_confidence = clamp(obj.confidence + fluctuation, 0.0, 1.0)
+		label_text = obj.object_label + ": " + str(round(display_confidence * 100) / 100.0)
+		
+		if is_interactable_in_range:
+			label_text += " [" + obj.interaction_text + "]"
 	
 	# Check if UI already exists for this object
 	if obj in cached_bounding_boxes:
@@ -554,11 +670,18 @@ func update_or_create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interacta
 		cached.label.text = label_text
 		cached.label_bg.color = label_bg_color
 		
-		# Recalculate label background size
-		var font = cached.label.get_theme_default_font()
-		var font_size = 20
-		var text_size = font.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
-		cached.label_bg.size = Vector2(text_size.x + 10, 25)
+		# Hide label in battery saving mode
+		if battery_saving_mode:
+			cached.label.visible = false
+			cached.label_bg.visible = false
+		else:
+			cached.label.visible = true
+			cached.label_bg.visible = true
+			# Recalculate label background size
+			var font = cached.label.get_theme_default_font()
+			var font_size = 20
+			var text_size = font.get_string_size(label_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+			cached.label_bg.size = Vector2(text_size.x + 10, 25)
 	else:
 		# CREATE new UI
 		var container = Control.new()
@@ -587,6 +710,11 @@ func update_or_create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interacta
 		label_bg.color = label_bg_color
 		label_bg.size = Vector2(text_size.x + 10, 25)
 		label_bg.position = Vector2(0, -30)
+		
+		# Hide label in battery saving mode
+		if battery_saving_mode:
+			label.visible = false
+			label_bg.visible = false
 		
 		container.add_child(label_bg)
 		container.add_child(label)
@@ -618,7 +746,7 @@ func remove_bounding_box_ui(obj):
 		cached_bounding_boxes.erase(obj)
 
 # Legacy function kept for compatibility
-func create_bounding_box_ui(obj: BasePrefab, bbox: Rect2, is_interactable_in_range: bool = false):
+func create_bounding_box_ui(obj, bbox: Rect2, is_interactable_in_range: bool = false):
 	update_or_create_bounding_box_ui(obj, bbox, is_interactable_in_range)
 
 # Returns array of border ColorRects for caching
@@ -718,14 +846,97 @@ func handle_right_click_interaction():
 	else:
 		print("No object in right-click interaction range")
 
-# Find the BasePrefab parent of a node
-func find_prefab_parent(node: Node) -> BasePrefab:
+# Find the BasePrefab (or BasePrefab-like) parent of a node
+func find_prefab_parent(node: Node):
 	var current_node = node
 	while current_node != null:
 		if current_node is BasePrefab:
-			return current_node as BasePrefab
+			return current_node
+		elif current_node.get("object_label") != null and current_node.get("confidence") != null:
+			# Duck-typing: if it has object_label and confidence, treat it like a prefab
+			return current_node
 		current_node = current_node.get_parent()
 	return null
+
+# Try to pick up trash object that player is looking at
+func try_pickup_trash() -> bool:
+	# Cast a ray from the camera to find what we're looking at
+	var space_state = get_world_3d().direct_space_state
+	var camera_pos = camera.global_position
+	var camera_forward = -camera.global_transform.basis.z
+	var ray_end = camera_pos + camera_forward * interaction_distance
+	
+	var query = PhysicsRayQueryParameters3D.create(camera_pos, ray_end)
+	query.exclude = [self]
+	
+	var result = space_state.intersect_ray(query)
+	
+	if not result.is_empty():
+		var hit_object = result.collider
+		var prefab = find_prefab_parent(hit_object)
+		
+		# Check if this is a trash object
+		if prefab and prefab.get("is_trash") and prefab.is_trash:
+			pickup_trash(prefab)
+			return true
+	
+	return false
+
+# Pick up a trash object
+func pickup_trash(trash):
+	print("Picking up trash: ", trash.object_label)
+	held_trash = trash
+	
+	# Check if it's a RigidBody3D and disable physics while held
+	if trash is RigidBody3D:
+		trash.freeze = true
+		# Reset velocities to prevent carried-over momentum
+		trash.linear_velocity = Vector3.ZERO
+		trash.angular_velocity = Vector3.ZERO
+	
+	# Update interaction text
+	trash.interaction_text = "DROP"
+	
+	# Position it in front of the camera
+	update_held_trash_position()
+
+# Drop the currently held trash
+func drop_trash():
+	if not held_trash:
+		return
+	
+	print("Dropping trash: ", held_trash.object_label)
+	
+	# Check if it's a RigidBody3D and re-enable physics
+	if held_trash is RigidBody3D:
+		# Re-enable physics
+		held_trash.freeze = false
+		
+		# Give it a slight forward velocity when dropped
+		var drop_velocity = -camera.global_transform.basis.z * 2.0
+		held_trash.linear_velocity = drop_velocity
+		
+		# Reset angular velocity to prevent spinning
+		held_trash.angular_velocity = Vector3.ZERO
+	
+	# Update interaction text back to pickup
+	held_trash.interaction_text = "PICK UP"
+	
+	# Clear held reference
+	held_trash = null
+
+# Update the position of held trash to follow camera
+func update_held_trash_position():
+	if not held_trash or not is_instance_valid(held_trash):
+		held_trash = null
+		return
+	
+	# Calculate position relative to camera
+	var target_pos = camera.global_position + camera.global_transform.basis * trash_hold_offset
+	held_trash.global_position = target_pos
+	
+	# Don't override rotation - let the object keep its natural orientation
+	# This prevents physics instability from constant rotation changes
 
 # Update list of interactable objects in range using raycast (same as actual interaction)
 func update_interactable_objects():
@@ -1108,3 +1319,66 @@ func stop_ambient_audio():
 	if ambient_audio and ambient_audio.playing:
 		ambient_audio.stop()
 		print("Stopped ambient audio for end sequence")
+
+# Setup battery low UI
+func setup_battery_low_ui():
+	# Create a label that will flash "Battery Low"
+	battery_low_label = Label.new()
+	battery_low_label.text = "BATTERY LOW"
+	battery_low_label.add_theme_color_override("font_color", Color.RED)
+	battery_low_label.add_theme_font_size_override("font_size", 48)
+	battery_low_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	battery_low_label.position = Vector2(-150, -100)
+	battery_low_label.visible = false
+	ui_overlay.add_child(battery_low_label)
+
+# Setup flash message label
+func setup_flash_message_label():
+	# Create a label that will flash start sequence message
+	flash_message_label = Label.new()
+	flash_message_label.text = ""
+	flash_message_label.add_theme_color_override("font_color", Color.GREEN)
+	flash_message_label.add_theme_font_size_override("font_size", 48)
+	flash_message_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	flash_message_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	flash_message_label.position = Vector2(-300, 0)  # Centered horizontally
+	flash_message_label.size = Vector2(600, 100)  # Wide enough for the text
+	flash_message_label.visible = false
+	ui_overlay.add_child(flash_message_label)
+
+# Activate battery saving mode (called by trigger in U Hall)
+func activate_battery_saving_mode():
+	print("Activating battery saving mode!")
+	
+	# Start the battery low flash
+	battery_flash_active = true
+	battery_flash_timer = 0.0
+	
+	# Enable battery saving mode after flash completes
+	# Set a timer to enable it
+	await get_tree().create_timer(battery_flash_duration).timeout
+	battery_saving_mode = true
+	print("Battery saving mode now active - boxes only, no labels!")
+
+# Pickup kitchen access card
+func pickup_kitchen_access_card():
+	has_kitchen_access_card = true
+	print("Player picked up kitchen access card!")
+	
+	# Find all access card doors in the scene and grant access
+	grant_kitchen_access_to_doors()
+
+# Grant kitchen access to all doors that require it
+func grant_kitchen_access_to_doors():
+	# Find all nodes in the scene
+	var scene_root = get_tree().current_scene
+	_grant_access_recursive(scene_root)
+
+func _grant_access_recursive(node: Node):
+	# Check if this node is an AccessCardDoor that requires kitchen access
+	if node.has_method("grant_access") and node.get("required_card") == "kitchen":
+		node.grant_access()
+	
+	# Recursively check children
+	for child in node.get_children():
+		_grant_access_recursive(child)

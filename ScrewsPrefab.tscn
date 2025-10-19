@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://screws_001"]
+
+[ext_resource type="Script" path="res://ScrewsPrefab.gd" id="1_screws"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_jar"]
+height = 0.15
+radius = 0.06
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jar"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jar"]
+albedo_color = Color(0.8, 0.8, 0.8, 0.5)
+transparency = 1
+
+[node name="ScrewsPrefab" type="StaticBody3D"]
+script = ExtResource("1_screws")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
+shape = SubResource("CylinderShape3D_jar")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
+mesh = SubResource("CylinderMesh_jar")
+surface_material_override/0 = SubResource("StandardMaterial3D_jar")
+

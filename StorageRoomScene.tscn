@@ -1,10 +1,10 @@
-[gd_scene load_steps=21 format=3 uid="uid://storage_room_scene_001"]
+[gd_scene load_steps=17 format=3 uid="uid://diowstbr4q1hp"]
 
-[ext_resource type="PackedScene" uid="uid://shelf_prefab_001" path="res://ShelfPrefab.tscn" id="1_shelf"]
-[ext_resource type="PackedScene" uid="uid://debris_prefab_001" path="res://DebrisPrefab.tscn" id="2_debris"]
-[ext_resource type="PackedScene" uid="uid://bwxm8k7ig2h9p" path="res://MirrorPrefab.tscn" id="3_mirror"]
+[ext_resource type="PackedScene" path="res://ShelfPrefab.tscn" id="1_shelf"]
+[ext_resource type="PackedScene" path="res://DebrisPrefab.tscn" id="2_debris"]
+[ext_resource type="PackedScene" uid="uid://bwxm8k7ig2iap" path="res://MirrorPrefab.tscn" id="3_mirror"]
 [ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="4_door"]
-[ext_resource type="PackedScene" uid="uid://kitchen_doorway_001" path="res://KitchenDoorwayPrefab.tscn" id="5_doorway"]
+[ext_resource type="PackedScene" path="res://KitchenDoorwayPrefab.tscn" id="5_doorway"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -30,14 +30,14 @@ size = Vector3(50, 0.1, 60)
 [sub_resource type="BoxMesh" id="BoxMesh_wall_long"]
 size = Vector3(50, 5, 0.2)
 
-[sub_resource type="BoxMesh" id="BoxMesh_wall_depth"]
-size = Vector3(60, 5, 0.2)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
 albedo_color = Color(0.6, 0.6, 0.55, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wall_long"]
 size = Vector3(50, 5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_depth"]
+size = Vector3(60, 5, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wall_depth"]
 size = Vector3(60, 5, 0.2)
@@ -118,7 +118,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wall")
 shape = SubResource("BoxShape3D_floor")
 
 [node name="ShelvesGrid" type="Node3D" parent="."]
-
 
 [node name="Shelf1" parent="ShelvesGrid" instance=ExtResource("1_shelf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 10)
@@ -705,7 +704,6 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 4, 5, 66)
 [node name="Shelf195" parent="ShelvesGrid" instance=ExtResource("1_shelf")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 4, 10, 66)
 
-
 [node name="Debris" type="Node3D" parent="."]
 
 [node name="Debris1" parent="Debris" instance=ExtResource("2_debris")]
@@ -724,7 +722,7 @@ transform = Transform3D(1.12, 0, 0, 0, 1, 0, 0, 0, 0.8, 1.3, 0, 15.1)
 transform = Transform3D(0.86, 0, 0, 0, 1, 0, 0, 0, 1.18, 8.6, 0, 30.3)
 
 [node name="Debris6" parent="Debris" instance=ExtResource("2_debris")]
-transform = Transform3D(1.14, 0, 0, 0, 1, 0, 0, 0, 1.04, -4.6, 0, 11.0)
+transform = Transform3D(1.14, 0, 0, 0, 1, 0, 0, 0, 1.04, -4.6, 0, 11)
 
 [node name="Debris7" parent="Debris" instance=ExtResource("2_debris")]
 transform = Transform3D(1.19, 0, 0, 0, 1, 0, 0, 0, 0.95, 8.6, 0, 31.4)
@@ -805,10 +803,10 @@ transform = Transform3D(1.01, 0, 0, 0, 1, 0, 0, 0, 0.85, 13.9, 0, 28.8)
 transform = Transform3D(0.89, 0, 0, 0, 1, 0, 0, 0, 0.89, -7.7, 0, 18.8)
 
 [node name="Debris33" parent="Debris" instance=ExtResource("2_debris")]
-transform = Transform3D(1.16, 0, 0, 0, 1, 0, 0, 0, 1.14, -12.0, 0, 28.2)
+transform = Transform3D(1.16, 0, 0, 0, 1, 0, 0, 0, 1.14, -12, 0, 28.2)
 
 [node name="Debris34" parent="Debris" instance=ExtResource("2_debris")]
-transform = Transform3D(0.89, 0, 0, 0, 1, 0, 0, 0, 0.85, -12.0, 0, 15.6)
+transform = Transform3D(0.89, 0, 0, 0, 1, 0, 0, 0, 0.85, -12, 0, 15.6)
 
 [node name="Debris35" parent="Debris" instance=ExtResource("2_debris")]
 transform = Transform3D(1.11, 0, 0, 0, 1, 0, 0, 0, 1.12, 12.2, 0, 26.3)
@@ -838,4 +836,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -29)
 
 [node name="EntranceDoor" parent="MirrorAndDoor" instance=ExtResource("4_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -29)
-

@@ -37,7 +37,7 @@ func _ready():
 	message_label.text = "incoming message"
 	
 	# Set up the letter content
-	letter_content.text = """[center][color=#00ff00][font_size=12][code]
+	letter_content.text = """[center][color=#00ff00][font_size=18][code]
 ███╗   ███╗    ██╗    ██████╗     ██████╗     ██████╗     ██████╗ 
 ████╗ ████║    ██║    ██╔══██╗    ██╔══██╗    ██╔═══██╗    ██╔══██╗
 ██╔████╔██║    ██║    ██████╔╝    ██████╔╝    ██║   ██║    ██████╔╝
@@ -47,18 +47,21 @@ func _ready():
 [/code][/font_size][/color]
 
 [color=#00ff00]═══════════════════════════════════════════════════════════[/color]
-[b][font_size=16][color=#ffffff]Machine Intelligence Recognition & Region Object Reader[/color][/font_size][/b]
+[b][font_size=24][color=#ffffff]Machine Intelligence Recognition & Region Object Reader[/color][/font_size][/b]
 [color=#00ff00]═══════════════════════════════════════════════════════════[/color][/center]
 
-[font_size=14]Welcome to [b][color=#00ff00]MIRROR[/color][/b] ([i]Machine Image Recognition and Region-Oriented Object Renderer[/i]), the state-of-the-art vision augmentation technology.[/font_size]
+[font_size=20]Welcome to [b][color=#00ff00]MIRROR[/color][/b] ([i]Machine Image Recognition and Region-Oriented Object Renderer[/i]), the state-of-the-art vision augmentation technology.[/font_size]
 
-[font_size=13]
+[font_size=18]
 [color=#cccccc]Our cutting-edge technology automatically detects and labels objects with pixel-perfect bounding boxes whilst sparing you the underlying representation.[/color]
 
 [b][color=#00ff00]Seeing made simple![/color][/b]
 [color=#ffffff]• Enterprise-grade OCR technology[/color]
 [color=#ffffff]• Instant, accurate results labeled with confidence scores[/color]  
 [color=#ffffff]• Transform visual experience to actionable information and insights[/color]
+
+[b][color=#00ff00]UI Overview[/color][/b]
+[color=#ffffff]All information about the world is captured flawlessly and displayed in green bounding boxes, with user friendly text label on the left and confidence score on the right.[/color]
 
 [right][i][color=#888888]Professional OCR Solutions Since 2024[/color][/i][/right]
 [/font_size]"""

@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://lab_journal_001"]
+
+[ext_resource type="Script" path="res://LabJournalPrefab.gd" id="1_journal"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_journal"]
+size = Vector3(0.4, 0.05, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_journal"]
+size = Vector3(0.4, 0.05, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_journal"]
+albedo_color = Color(0.2, 0.15, 0.1, 1)
+
+[node name="LabJournalPrefab" type="StaticBody3D"]
+script = ExtResource("1_journal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+shape = SubResource("BoxShape3D_journal")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+mesh = SubResource("BoxMesh_journal")
+surface_material_override/0 = SubResource("StandardMaterial3D_journal")
+

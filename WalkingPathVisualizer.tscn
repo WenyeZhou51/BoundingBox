@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://walking_path_visualizer"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_path_horizontal"]
+size = Vector3(15, 0.01, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_red"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_path_vertical"]
+size = Vector3(0.1, 0.01, 10)
+
+[node name="WalkingPathVisualizer" type="Node3D"]
+
+[node name="PathInLab" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.5, 0.01, -1.11275)
+mesh = SubResource("BoxMesh_path_horizontal")
+surface_material_override/0 = SubResource("StandardMaterial3D_red")
+
+[node name="PathInConnectorSeg1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.9874, 0.01, -1.11275)
+mesh = SubResource("BoxMesh_path_horizontal")
+surface_material_override/0 = SubResource("StandardMaterial3D_red")
+
+[node name="PathTurn" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.9874, 0.01, -1.11275)
+mesh = SubResource("BoxMesh_path_vertical")
+surface_material_override/0 = SubResource("StandardMaterial3D_red")
+
+[node name="PathInConnectorSeg2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.9874, 0.01, 3.88725)
+mesh = SubResource("BoxMesh_path_vertical")
+surface_material_override/0 = SubResource("StandardMaterial3D_red")
+
+[node name="PathInFreezer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9874, 0.01, 8.88725)
+mesh = SubResource("BoxMesh_path_horizontal")
+surface_material_override/0 = SubResource("StandardMaterial3D_red")
+

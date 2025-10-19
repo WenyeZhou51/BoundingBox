@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://IntroSequence.gd" id="1_intro"]
 [ext_resource type="AudioStream" uid="uid://b4rdbp8jclhcw" path="res://Audio/Incoming message sound.wav" id="2_incoming_message"]
 [ext_resource type="AudioStream" uid="uid://lgqkg5jwwgdy" path="res://Audio/Confirm sound.mp3" id="3_confirm_sound"]
-[ext_resource type="PackedScene" path="res://FirstPersonController.tscn" id="4_controller"]
+[ext_resource type="PackedScene" uid="uid://b5u3m8k3nqc7w" path="res://FirstPersonController.tscn" id="4_controller"]
 [ext_resource type="PackedScene" uid="uid://c8osnxx8ti0gr" path="res://LivingRoomScene.tscn" id="5_living"]
 [ext_resource type="PackedScene" uid="uid://bw5qhpg0akq5" path="res://HallwayScene.tscn" id="6_hallway"]
 [ext_resource type="PackedScene" uid="uid://ej6pqkyk3els" path="res://StudyScene.tscn" id="7_study"]
@@ -153,10 +153,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
+offset_left = -450.0
+offset_top = -275.0
+offset_right = 450.0
+offset_bottom = 275.0
 grow_horizontal = 2
 grow_vertical = 2
 

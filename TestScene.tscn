@@ -1,7 +1,168 @@
-[gd_scene load_steps=2 format=3 uid="uid://ceiub3rnqc0x8"]
+[gd_scene load_steps=15 format=3 uid="uid://ceiub3rnqc0x8"]
 
-[ext_resource type="PackedScene" uid="uid://c4j8kqx6yk8xv" path="res://Player.tscn" id="1_player"]
+[ext_resource type="Script" path="res://IntroSequence.gd" id="1_intro"]
+[ext_resource type="AudioStream" uid="uid://b4rdbp8jclhcw" path="res://Audio/Incoming message sound.wav" id="2_incoming_message"]
+[ext_resource type="AudioStream" uid="uid://lgqkg5jwwgdy" path="res://Audio/Confirm sound.mp3" id="3_confirm_sound"]
+[ext_resource type="PackedScene" uid="uid://b5u3m8k3nqc7w" path="res://FirstPersonController.tscn" id="4_controller"]
+[ext_resource type="PackedScene" uid="uid://ccpxru3k6elyr" path="res://LabRoomScene.tscn" id="5_lab"]
+[ext_resource type="PackedScene" uid="uid://bu1rwlcvu1vjh" path="res://FreezerScene.tscn" id="7_freezer"]
+[ext_resource type="PackedScene" path="res://WalkingPathVisualizer.tscn" id="8_path"]
+[ext_resource type="PackedScene" uid="uid://c8osnxx8ti0gr" path="res://LivingRoomScene.tscn" id="9_living"]
+[ext_resource type="PackedScene" uid="uid://bw5qhpg0akq5" path="res://HallwayScene.tscn" id="10_hallway"]
+[ext_resource type="PackedScene" uid="uid://ej6pqkyk3els" path="res://StudyScene.tscn" id="11_study"]
+[ext_resource type="PackedScene" uid="uid://dyhw7i2ywupfo" path="res://StairwellScene.tscn" id="12_stairwell"]
+[ext_resource type="PackedScene" uid="uid://bu1rwlhnbydjd" path="res://KitchenScene.tscn" id="13_kitchen"]
+[ext_resource type="PackedScene" uid="uid://0p4v1wxu7oqr" path="res://DormHallwayScene.tscn" id="14_dorm"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.5, 0.7, 1, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.3
 
 [node name="TestScene" type="Node3D"]
 
-[node name="Player" parent="." instance=ExtResource("1_player")]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="FirstPersonController" parent="." instance=ExtResource("4_controller")]
+
+[node name="LabRoomScene" parent="." instance=ExtResource("5_lab")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.1874, -0.141889, -1.11275)
+
+[node name="FreezerScene" parent="." instance=ExtResource("7_freezer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.8349, 0.336539, -17.9887)
+
+[node name="WalkingPathVisualizer" parent="." instance=ExtResource("8_path")]
+
+[node name="LivingRoomScene" parent="." instance=ExtResource("9_living")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0310364, 0, -1.96951)
+
+[node name="HallwayScene" parent="." instance=ExtResource("10_hallway")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -11.1793, 0, -1.93482)
+
+[node name="StudyScene" parent="." instance=ExtResource("11_study")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -21.2638, 0, -1.05069)
+
+[node name="StairwellScene" parent="." instance=ExtResource("12_stairwell")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.3002, -7.48008, 5.95452)
+
+[node name="KitchenScene" parent="." instance=ExtResource("13_kitchen")]
+transform = Transform3D(-0.025828, 0, 0.999666, 0, 1, 0, -0.999666, 0, -0.025828, -21.6335, 0.220967, -9.34007)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+
+[node name="DormHallwayScene" parent="." instance=ExtResource("14_dorm")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -20.5591, -7.55391, -9.55644)
+
+[node name="IntroSequence" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_intro")
+
+[node name="BlackScreen" type="ColorRect" parent="IntroSequence"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="MessageBox" type="Panel" parent="IntroSequence"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -50.0
+offset_right = 150.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MessageLabel" type="Label" parent="IntroSequence/MessageBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "incoming message"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LetterPanel" type="Panel" parent="IntroSequence"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -275.0
+offset_right = 450.0
+offset_bottom = 275.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LetterContent" type="RichTextLabel" parent="IntroSequence/LetterPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "Letter content will be set by script"
+
+[node name="CloseButton" type="Button" parent="IntroSequence/LetterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -40.0
+offset_right = 50.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close"
+
+[node name="IncomingMessageAudio" type="AudioStreamPlayer" parent="IntroSequence"]
+stream = ExtResource("2_incoming_message")
+
+[node name="ConfirmSoundAudio" type="AudioStreamPlayer" parent="IntroSequence"]
+stream = ExtResource("3_confirm_sound")
+
+[node name="FlashMessageLabel" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = 100.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1

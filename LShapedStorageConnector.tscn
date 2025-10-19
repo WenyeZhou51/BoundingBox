@@ -1,0 +1,248 @@
+[gd_scene load_steps=18 format=3 uid="uid://lshaped_storage_connector"]
+
+[ext_resource type="PackedScene" path="res://FrozenBoxPrefab.tscn" id="1_box"]
+[ext_resource type="PackedScene" path="res://DebrisPrefab.tscn" id="2_debris"]
+[ext_resource type="PackedScene" path="res://WatchPrefab.tscn" id="3_watch"]
+[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="4_door"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_color = Color(0.6, 0.6, 0.6, 1)
+ambient_light_energy = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor_seg1"]
+size = Vector3(10, 0.1, 2.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.3, 0.3, 0.35, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor_seg1"]
+size = Vector3(10, 0.1, 2.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor_seg2"]
+size = Vector3(4, 0.1, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor_seg2"]
+size = Vector3(4, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_10"]
+size = Vector3(10, 4, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_10"]
+size = Vector3(10, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_8"]
+size = Vector3(8, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_8"]
+size = Vector3(8, 4, 0.2)
+
+[node name="LShapedStorageConnector" type="Node3D"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 5, 5)
+light_energy = 0.6
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_1")
+
+[node name="Room" type="Node3D" parent="."]
+
+[node name="FloorSegment1" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/FloorSegment1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor_seg1")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/FloorSegment1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_floor_seg1")
+
+[node name="FloorSegment2" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 7)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/FloorSegment2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor_seg2")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/FloorSegment2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_floor_seg2")
+
+[node name="CeilingSegment1" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/CeilingSegment1"]
+mesh = SubResource("BoxMesh_floor_seg1")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/CeilingSegment1"]
+shape = SubResource("BoxShape3D_floor_seg1")
+
+[node name="CeilingSegment2" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 4, 7)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/CeilingSegment2"]
+mesh = SubResource("BoxMesh_floor_seg2")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/CeilingSegment2"]
+shape = SubResource("BoxShape3D_floor_seg2")
+
+[node name="WallNorth1" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, -1.35)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallNorth1"]
+mesh = SubResource("BoxMesh_wall_10")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallNorth1"]
+shape = SubResource("BoxShape3D_wall_10")
+
+[node name="WallSouth1" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, 1.35)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallSouth1"]
+mesh = SubResource("BoxMesh_wall_10")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallSouth1"]
+shape = SubResource("BoxShape3D_wall_10")
+
+[node name="WallWest2" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 7.9, 2, 7)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallWest2"]
+mesh = SubResource("BoxMesh_wall_10")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallWest2"]
+shape = SubResource("BoxShape3D_wall_10")
+
+[node name="WallEast2" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 12.1, 2, 7)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallEast2"]
+mesh = SubResource("BoxMesh_wall_10")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallEast2"]
+shape = SubResource("BoxShape3D_wall_10")
+
+[node name="WallNorth2" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2, 12.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallNorth2"]
+mesh = SubResource("BoxMesh_wall_10")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallNorth2"]
+shape = SubResource("BoxShape3D_wall_10")
+
+[node name="WallCornerEast" type="StaticBody3D" parent="Room"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 10.1, 2, 4)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallCornerEast"]
+mesh = SubResource("BoxMesh_wall_8")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/WallCornerEast"]
+shape = SubResource("BoxShape3D_wall_8")
+
+[node name="Doors" type="Node3D" parent="."]
+
+[node name="WestDoor" parent="Doors" instance=ExtResource("4_door")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 0)
+
+[node name="EastDoor" parent="Doors" instance=ExtResource("4_door")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 12, 0, 10)
+
+[node name="StorageItems" type="Node3D" parent="."]
+
+[node name="BoxStack1" type="Node3D" parent="StorageItems"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -0.8)
+
+[node name="Box1" parent="StorageItems/BoxStack1" instance=ExtResource("1_box")]
+
+[node name="Box2" parent="StorageItems/BoxStack1" instance=ExtResource("1_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, 0.05)
+
+[node name="Box3" parent="StorageItems/BoxStack1" instance=ExtResource("1_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0.6, 0)
+
+[node name="Debris1" parent="StorageItems/BoxStack1" instance=ExtResource("2_debris")]
+transform = Transform3D(0.8, 0, 0, 0, 1, 0, 0, 0, 0.7, -0.05, 0.9, 0)
+confidence = 0.4
+
+[node name="Watch" parent="StorageItems/BoxStack1/Debris1" instance=ExtResource("3_watch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+
+[node name="BoxStack2" type="Node3D" parent="StorageItems"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0.8)
+
+[node name="Box1" parent="StorageItems/BoxStack2" instance=ExtResource("1_box")]
+
+[node name="Box2" parent="StorageItems/BoxStack2" instance=ExtResource("1_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.3, -0.05)
+
+[node name="BoxStack3" type="Node3D" parent="StorageItems"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 9)
+
+[node name="Box1" parent="StorageItems/BoxStack3" instance=ExtResource("1_box")]
+
+[node name="Box2" parent="StorageItems/BoxStack3" instance=ExtResource("1_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0.3, 0.05)
+
+[node name="Box3" parent="StorageItems/BoxStack3" instance=ExtResource("1_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.6, -0.05)
+
+[node name="BoxStack4" type="Node3D" parent="StorageItems"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 4)
+
+[node name="Box1" parent="StorageItems/BoxStack4" instance=ExtResource("1_box")]
+
+[node name="Box2" parent="StorageItems/BoxStack4" instance=ExtResource("1_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+
+[node name="CornerJunk" type="Node3D" parent="StorageItems"]
+
+[node name="Debris1" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(0.9, 0, 0, 0, 1, 0, 0, 0, 1.1, 1, 0, -1.1)
+
+[node name="Debris2" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 0.9, 0.5, 0, -1.0)
+
+[node name="Debris3" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(0.85, 0, 0, 0, 1, 0, 0, 0, 1.15, 9, 0, -1.1)
+
+[node name="Debris4" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(1.05, 0, 0, 0, 1, 0, 0, 0, 0.95, 8.5, 0, -1.0)
+
+[node name="Debris5" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(0.95, 0, 0, 0, 1, 0, 0, 0, 1.05, 11.5, 0, 11.5)
+
+[node name="Debris6" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 0.85, 11.3, 0, 11.3)
+
+[node name="Debris7" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(0.9, 0, 0, 0, 1, 0, 0, 0, 1.05, 8.5, 0, 3)
+
+[node name="Debris8" parent="StorageItems/CornerJunk" instance=ExtResource("2_debris")]
+transform = Transform3D(1.05, 0, 0, 0, 1, 0, 0, 0, 0.9, 8.3, 0, 2.5)
+

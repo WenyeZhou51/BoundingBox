@@ -1,6 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://0p4v1wxu7oqr"]
+[gd_scene load_steps=14 format=3 uid="uid://0p4v1wxu7oqr"]
 
 [ext_resource type="PackedScene" uid="uid://c54l40l50gykk" path="res://DormRoomPrefab.tscn" id="1_dorm_room"]
+[ext_resource type="PackedScene" path="res://KitchenAccessCardPrefab.tscn" id="2_kitchen_card"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -30,7 +31,7 @@ size = Vector3(30, 0.2, 6)
 albedo_color = Color(0.85, 0.85, 0.8, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ceiling"]
-size = Vector3(30, 0.2, 6)
+size = Vector3(27.1709, 0.2, 6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_wall_segment"]
 size = Vector3(5, 4, 0.2)
@@ -64,10 +65,12 @@ shape = SubResource("BoxShape3D_hallway_floor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="HallwayStructure/Ceiling"]
+transform = Transform3D(0.895858, 0, 0, 0, 1, 0, 0, 0, 1, -1.3654, 0, 0)
 mesh = SubResource("BoxMesh_ceiling")
 surface_material_override/0 = SubResource("StandardMaterial3D_wall")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HallwayStructure/Ceiling"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.41455, 0, 0)
 shape = SubResource("BoxShape3D_ceiling")
 
 [node name="NorthWallSegments" type="Node3D" parent="HallwayStructure"]
@@ -193,6 +196,9 @@ is_smeared_plate = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -5)
 room_number = "1025"
 occupant_name = "Shay Thompson"
+
+[node name="KitchenAccessCard" parent="LeftRooms/Room1025_Shay" instance=ExtResource("2_kitchen_card")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0.8, 0.85, -0.3)
 
 [node name="RightRooms" type="Node3D" parent="."]
 

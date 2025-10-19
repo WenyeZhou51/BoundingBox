@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cno2s6sbxsle5"
+path="res://.godot/imported/wind chime.wav-755bceabbd5919f8cb545127fc3ec69f.sample"
+
+[deps]
+
+source_file="res://Audio/wind chime.wav"
+dest_files=["res://.godot/imported/wind chime.wav-755bceabbd5919f8cb545127fc3ec69f.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://b8x7y9z2a1b2c"]
+
+[ext_resource type="Script" path="res://RailingPrefab.gd" id="1_railing_script"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_railing"]
+size = Vector3(0.1, 1.0, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_railing"]
+albedo_color = Color(0.6, 0.5, 0.4, 1)
+metallic = 0.7
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_railing"]
+size = Vector3(0.1, 1.0, 0.3)
+
+[node name="RailingPrefab" type="StaticBody3D"]
+script = ExtResource("1_railing_script")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_railing")
+surface_material_override/0 = SubResource("StandardMaterial3D_railing")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_railing")

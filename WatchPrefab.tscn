@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://watch_prefab_001"]
+
+[ext_resource type="Script" path="res://WatchPrefab.gd" id="1_watch"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_watch"]
+height = 0.05
+radius = 0.08
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_watch"]
+top_radius = 0.08
+bottom_radius = 0.08
+height = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_watch"]
+albedo_color = Color(0.2, 0.2, 0.25, 1)
+metallic = 0.8
+roughness = 0.2
+
+[node name="WatchPrefab" type="StaticBody3D"]
+script = ExtResource("1_watch")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+shape = SubResource("CylinderShape3D_watch")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+mesh = SubResource("CylinderMesh_watch")
+surface_material_override/0 = SubResource("StandardMaterial3D_watch")
+

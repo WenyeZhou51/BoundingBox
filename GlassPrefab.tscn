@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://glass_001"]
+
+[ext_resource type="Script" path="res://GlassPrefab.gd" id="1_glass"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_glass"]
+height = 0.12
+radius = 0.08
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_glass"]
+top_radius = 0.08
+bottom_radius = 0.08
+height = 0.12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glass"]
+transparency = 1
+albedo_color = Color(0.85, 0.9, 1, 0.6)
+metallic = 0.1
+roughness = 0.05
+refraction_enabled = true
+
+[node name="GlassPrefab" type="StaticBody3D"]
+script = ExtResource("1_glass")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+shape = SubResource("CylinderShape3D_glass")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("CylinderMesh_glass")
+surface_material_override/0 = SubResource("StandardMaterial3D_glass")
+

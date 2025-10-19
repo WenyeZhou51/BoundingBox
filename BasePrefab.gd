@@ -6,6 +6,7 @@ class_name BasePrefab
 @export var is_interactable: bool = false
 @export var interaction_text: String = "INTERACT"  # Customizable interaction text
 @export var is_shootable: bool = false  # Can this object be shot with the gun?
+@export var is_trash: bool = false  # Can this object be picked up and dropped?
 
 func _ready():
 	print("Prefab initialized - Label: ", object_label, ", Confidence: ", confidence)
