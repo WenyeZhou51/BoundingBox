@@ -1,11 +1,14 @@
 extends BasePrefab
 
-@export var detection_distance: float = 5.0  # Distance to detect player in front of mirror
-@export var detection_angle: float = 90.0    # Angle in degrees for detection cone
+@export var detection_distance: float = 8.0  # Distance to detect player near mirror
 
-var player_reflection_active: bool = false
+var player_near: bool = false
 var player_node: Node = null
 var is_broken: bool = false
+
+# OPTIMIZATION: Reduce check frequency
+var frame_counter: int = 0
+var check_interval: int = 3  # Only check every 3 frames instead of every frame
 
 # Preload the broken glass scene
 var broken_glass_scene = preload("res://BrokenGlassPrefab.tscn")
@@ -14,10 +17,12 @@ var broken_glass_scene = preload("res://BrokenGlassPrefab.tscn")
 @onready var mirror_shatter_audio: AudioStreamPlayer = $MirrorShatterAudio
 
 func _ready():
-	# Mirror itself has no label and is not interactable
-	object_label = ""
+	# Mirror is interactable (left-click and F key)
+	# When player is near, shows as "Trash" with red label
+	object_label = "Mirror"
 	confidence = 0.0
-	is_interactable = false
+	is_interactable = true
+	interaction_text = ""  # Empty string - don't show [INTERACT] text
 	
 	# Find the player node
 	player_node = get_tree().get_first_node_in_group("player")
@@ -25,100 +30,60 @@ func _ready():
 	super._ready()
 
 func _process(_delta):
-	# Only check for reflections if mirror isn't broken
+	# Check if player is near the mirror (only if not broken)
 	if not is_broken:
-		check_player_reflection()
+		frame_counter += 1
+		if frame_counter >= check_interval:
+			frame_counter = 0
+			check_player_proximity()
 
-func check_player_reflection() -> bool:
+func check_player_proximity():
 	if not player_node:
-		player_reflection_active = false
-		return false
+		player_near = false
+		return
 	
 	var mirror_pos = global_position
 	var player_pos = player_node.global_position
-	var mirror_forward = -global_transform.basis.z  # Mirror faces forward (-z direction)
 	
-	# Calculate vector from mirror to player
-	var to_player = player_pos - mirror_pos
-	var distance = to_player.length()
+	# Check distance to player
+	var distance_squared = mirror_pos.distance_squared_to(player_pos)
+	var detection_distance_squared = detection_distance * detection_distance
 	
-	# Debug prints
-	var was_active = player_reflection_active
+	var was_near = player_near
+	player_near = distance_squared <= detection_distance_squared
 	
-	# Check if player is within detection distance
-	if distance > detection_distance:
-		player_reflection_active = false
-		if was_active:
-			print("Mirror: Player too far away (", distance, " > ", detection_distance, ")")
-		return false
-	
-	# Check if player is in front of the mirror (not behind it)
-	var dot_product = mirror_forward.dot(to_player.normalized())
-	if dot_product < 0:  # Player is behind the mirror
-		player_reflection_active = false
-		if was_active:
-			print("Mirror: Player behind mirror (dot: ", dot_product, ")")
-		return false
-	
-	# Check if player is within the detection angle
-	var angle = acos(dot_product) * 180.0 / PI
-	if angle > detection_angle / 2.0:
-		player_reflection_active = false
-		if was_active:
-			print("Mirror: Player outside angle (", angle, " > ", detection_angle / 2.0, ")")
-		return false
-	
-	# Player is in front of the mirror within range and angle
-	if not was_active:
-		print("Mirror: Player reflection activated! Distance: ", distance, ", Angle: ", angle)
-	player_reflection_active = true
-	return true
+	# Update label when player gets near/far
+	if player_near and not was_near:
+		object_label = "Trash"
+		confidence = 0.92
+		print("Mirror: Player approached - showing Trash label")
+	elif not player_near and was_near:
+		object_label = "Mirror"
+		confidence = 0.0
+		print("Mirror: Player left - hiding label")
 
 # Override the should_be_visible_in_vision_mode function
 func should_be_visible_in_vision_mode() -> bool:
-	# If broken, show as mirror frame in vision mode
+	# Show mirror in vision mode only if broken OR if player is near
 	if is_broken:
 		return true
-	# Mirror itself should not be visible in vision mode
-	# Only the reflection should be visible when player is in front
-	return false
+	return player_near
 
-# This function will be called by the FirstPersonController to get reflection info
-func get_player_reflection_info() -> Dictionary:
-	if not player_reflection_active or not player_node or is_broken:
-		return {"active": false}
-	
-	# Calculate the reflection position (mirror the player's position across the mirror plane)
-	var mirror_pos = global_position
-	var player_pos = player_node.global_position
-	var mirror_forward = -global_transform.basis.z
-	var mirror_right = global_transform.basis.x
-	var mirror_up = global_transform.basis.y
-	
-	# Project player position onto mirror plane
-	var to_player = player_pos - mirror_pos
-	var distance_to_plane = to_player.dot(mirror_forward)
-	
-	# Calculate reflection position (mirror the player across the mirror plane)
-	var reflection_pos = player_pos - 2 * distance_to_plane * mirror_forward
-	
-	print("Mirror: Returning reflection info - active: true, pos: ", reflection_pos)
-	
-	return {
-		"active": true,
-		"position": reflection_pos,
-		"label": "Player",
-		"confidence": 1.0
-	}
+# Return custom scale factor for bounding box to make it appear "inside" the mirror
+# This makes the bounding box 30% smaller on each side (70% of original size)
+func get_bounding_box_scale() -> float:
+	if player_near and not is_broken:
+		return 0.7  # 30% smaller
+	return 1.0
 
-# Handle right-click interaction to break the mirror
-func right_click_interact():
-	print("MirrorPrefab: right_click_interact() called!")
+# Shared logic for breaking the mirror
+func _break_mirror():
+	print("MirrorPrefab: _break_mirror() called!")
 	if is_broken:
 		print("Mirror is already broken!")
 		return
 	
-	print("Breaking mirror! Spawning 10 broken glass pieces (3 straight down, 7 scattered)...")
+	print("Breaking mirror! Spawning 5 broken glass pieces (2 straight down, 3 scattered)...")
 	
 	# Play mirror shatter sound
 	if mirror_shatter_audio:
@@ -126,14 +91,21 @@ func right_click_interact():
 	
 	is_broken = true
 	
-	# Spawn 7 broken glass pieces with downward velocities
+	# Spawn broken glass pieces
 	spawn_broken_glass()
 	
-	# Transform this mirror into a mirror frame
+	# Transform this mirror into a mirror frame (no end sequence trigger)
 	transform_to_mirror_frame()
-	
-	# Trigger the end sequence
-	trigger_end_sequence()
+
+# Handle left-click interaction to break the mirror
+func interact():
+	# Left-click interaction will be routed here by FirstPersonController.handle_interaction()
+	_break_mirror()
+
+# Preserve right-click handler (in case anything still calls it), but delegate to shared logic
+func right_click_interact():
+	print("MirrorPrefab: right_click_interact() called!")
+	_break_mirror()
 
 func spawn_broken_glass():
 	var mirror_pos = global_position
@@ -144,8 +116,8 @@ func spawn_broken_glass():
 	# Get reference to the FirstPersonController to add glass pieces to detected objects
 	var player = get_tree().get_first_node_in_group("player")
 	
-	# Spawn 10 pieces of broken glass total: 3 fall straight down, 7 scatter around
-	for i in range(10):
+	# Spawn 5 pieces of broken glass total: 2 fall straight down, 3 scatter around
+	for i in range(5):
 		var glass_piece = broken_glass_scene.instantiate()
 		
 		# Position glass pieces slightly in front of the mirror
@@ -155,14 +127,14 @@ func spawn_broken_glass():
 		
 		glass_piece.global_position = spawn_pos
 		
-		# First 3 pieces fall straight down, remaining 7 scatter around
+		# First 2 pieces fall straight down, remaining 3 scatter around
 		var velocity: Vector3
-		if i < 3:
-			# Make first 3 pieces fall straight down (no horizontal velocity)
+		if i < 2:
+			# Make first 2 pieces fall straight down (no horizontal velocity)
 			velocity = Vector3(0, -2.0, 0)
 			print("Spawned broken glass piece ", i + 1, " at ", spawn_pos, " falling straight down")
 		else:
-			# Make remaining 7 pieces scatter around with random horizontal velocity
+			# Make remaining 3 pieces scatter around with random horizontal velocity
 			var horizontal_speed = randf_range(1.0, 3.0)
 			var scatter_angle = randf_range(0, 2 * PI)  # Random direction
 			var horizontal_velocity = Vector3(
@@ -194,12 +166,5 @@ func transform_to_mirror_frame():
 	print("Transformed mirror into Mirror Frame with 95% confidence")
 
 func trigger_end_sequence():
-	print("MirrorPrefab: trigger_end_sequence() called!")
-	# Find the player and trigger the end sequence
-	var player = get_tree().get_first_node_in_group("player")
-	print("MirrorPrefab: Found player: ", player)
-	if player and player.has_method("trigger_end_sequence"):
-		print("MirrorPrefab: Triggering end sequence through player...")
-		player.trigger_end_sequence()
-	else:
-		print("Error: Player not found or doesn't have trigger_end_sequence method!")
+	# End sequence should no longer be triggered by this mirror.
+	print("MirrorPrefab: trigger_end_sequence() called, but end sequence is now disabled for this mirror.")

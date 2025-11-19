@@ -1,11 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://ceiub3rnqc0x8"]
+[gd_scene load_steps=16 format=3 uid="uid://ceiub3rnqc0x8"]
 
 [ext_resource type="Script" path="res://IntroSequence.gd" id="1_intro"]
 [ext_resource type="AudioStream" uid="uid://b4rdbp8jclhcw" path="res://Audio/Incoming message sound.wav" id="2_incoming_message"]
 [ext_resource type="AudioStream" uid="uid://lgqkg5jwwgdy" path="res://Audio/Confirm sound.mp3" id="3_confirm_sound"]
 [ext_resource type="PackedScene" uid="uid://b5u3m8k3nqc7w" path="res://FirstPersonController.tscn" id="4_controller"]
-[ext_resource type="PackedScene" uid="uid://ccpxru3k6elyr" path="res://LabRoomScene.tscn" id="5_lab"]
 [ext_resource type="PackedScene" uid="uid://bu1rwlcvu1vjh" path="res://FreezerScene.tscn" id="7_freezer"]
+[ext_resource type="PackedScene" uid="uid://0lptvy7hrfgk" path="res://RecRoomScene.tscn" id="7_recroom"]
 [ext_resource type="PackedScene" path="res://WalkingPathVisualizer.tscn" id="8_path"]
 [ext_resource type="PackedScene" uid="uid://c8osnxx8ti0gr" path="res://LivingRoomScene.tscn" id="9_living"]
 [ext_resource type="PackedScene" uid="uid://bw5qhpg0akq5" path="res://HallwayScene.tscn" id="10_hallway"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://dyhw7i2ywupfo" path="res://StairwellScene.tscn" id="12_stairwell"]
 [ext_resource type="PackedScene" uid="uid://bu1rwlhnbydjd" path="res://KitchenScene.tscn" id="13_kitchen"]
 [ext_resource type="PackedScene" uid="uid://0p4v1wxu7oqr" path="res://DormHallwayScene.tscn" id="14_dorm"]
+[ext_resource type="PackedScene" uid="uid://clrukf7eqy8qw" path="res://BathroomScene.tscn" id="15_h0ugs"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
@@ -28,19 +29,16 @@ environment = SubResource("Environment_1")
 
 [node name="FirstPersonController" parent="." instance=ExtResource("4_controller")]
 
-[node name="LabRoomScene" parent="." instance=ExtResource("5_lab")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.1874, -0.141889, -1.11275)
-
 [node name="FreezerScene" parent="." instance=ExtResource("7_freezer")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.8349, 0.336539, -17.9887)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5206, -0.033911, -17.9)
 
 [node name="WalkingPathVisualizer" parent="." instance=ExtResource("8_path")]
 
 [node name="LivingRoomScene" parent="." instance=ExtResource("9_living")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0310364, 0, -1.96951)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.165215, 0.0490638, -0.78065)
 
 [node name="HallwayScene" parent="." instance=ExtResource("10_hallway")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -11.1793, 0, -1.93482)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -11.1793, 0, -0.975306)
 
 [node name="StudyScene" parent="." instance=ExtResource("11_study")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -21.2638, 0, -1.05069)
@@ -49,7 +47,7 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -21.26
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.3002, -7.48008, 5.95452)
 
 [node name="KitchenScene" parent="." instance=ExtResource("13_kitchen")]
-transform = Transform3D(-0.025828, 0, 0.999666, 0, 1, 0, -0.999666, 0, -0.025828, -21.6335, 0.220967, -9.34007)
+transform = Transform3D(-0.025828, 0, 0.999666, 0, 1, 0, -0.999666, 0, -0.025828, -21.4075, -0.00845438, -9.11015)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 
@@ -166,3 +164,9 @@ theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="RecRoomScene" parent="." instance=ExtResource("7_recroom")]
+transform = Transform3D(-0.0279565, 0, -0.999609, 0, 1, 0, 0.999609, 0, -0.0279565, -32.1608, 0.173612, -17.9947)
+
+[node name="BathroomScene" parent="." instance=ExtResource("15_h0ugs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4908, -7.43579, -26.6489)

@@ -1,5 +1,6 @@
-[gd_scene load_steps=20 format=3 uid="uid://c8osnxx8ti0gr"]
+[gd_scene load_steps=21 format=3 uid="uid://c8osnxx8ti0gr"]
 
+[ext_resource type="AudioStream" uid="uid://df57gak0bmf6j" path="res://Audio/new ambience.mp3" id="1_ambient_audio"]
 [ext_resource type="PackedScene" uid="uid://hmlv008dmcf7" path="res://SofaPrefab.tscn" id="1_sofa"]
 [ext_resource type="PackedScene" uid="uid://hmlv008dewnn" path="res://LampPrefab.tscn" id="2_lamp"]
 [ext_resource type="PackedScene" uid="uid://dq61fyb32pgrm" path="res://TablePrefab.tscn" id="3_table"]
@@ -172,3 +173,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 1.5, -4.89)
 
 [node name="Door" parent="." instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 0, 0)
+
+[node name="LivingRoomAmbientAudio" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+stream = ExtResource("1_ambient_audio")
+attenuation_model = 1
+volume_db = 5.0
+unit_size = 1.0
+autoplay = true
+max_distance = 40.0

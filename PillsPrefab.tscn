@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://pills_prefab_001"]
+
+[ext_resource type="Script" path="res://PillsPrefab.gd" id="1_pills"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pills"]
+height = 0.08
+radius = 0.06
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pills"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.08
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pills"]
+albedo_color = Color(1, 0.9, 0.8, 1)
+
+[node name="PillsPrefab" type="StaticBody3D"]
+script = ExtResource("1_pills")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+shape = SubResource("CylinderShape3D_pills")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+mesh = SubResource("CylinderMesh_pills")
+surface_material_override/0 = SubResource("StandardMaterial3D_pills")
+

@@ -129,15 +129,11 @@ func create_ui_elements():
 	content_label.position = Vector2(20, 20)
 	content_label.size = Vector2(560, 320)
 	content_label.bbcode_enabled = true
-	content_label.text = """[color=green][font_size=18][center]REMINDER NOTICE[/center]
+	content_label.text = """[color=green][font_size=20]To-do List, Ernest[/font_size]
 
-[font_size=16]Things are objects. A door is a thing. A TV is a thing. 
-
-Things usually do not have eyes or mouths. 
-
-In the rare case that they do, they will not speak to you. 
-
-If you suspect a thing is speaking to you, turn and leave without causing alarm.[/font_size][/color]"""
+[font_size=18]Do some more writing 
+Celebrate birthday at dorm commons
+take nitroglycerin pills (important!)[/font_size][/color]"""
 	content_label.visible = false
 	
 	# Style the text to match game theme (green text on black background)

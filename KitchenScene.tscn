@@ -1,12 +1,12 @@
 [gd_scene load_steps=20 format=3 uid="uid://bu1rwlhnbydjd"]
 
+[ext_resource type="AudioStream" uid="uid://barnanl7v78aq" path="res://Audio/Kitchen amb.mp3" id="1_kitchen_ambient_audio"]
 [ext_resource type="PackedScene" uid="uid://dq61fyb32at2m" path="res://StovePrefab.tscn" id="1_stove"]
 [ext_resource type="PackedScene" uid="uid://bbpna14nackqv" path="res://CounterPrefab.tscn" id="2_counter"]
 [ext_resource type="PackedScene" uid="uid://bbpna2oct38qw" path="res://VegetablesPrefab.tscn" id="3_veggies"]
 [ext_resource type="PackedScene" uid="uid://hmlv008dijfl" path="res://OvenPrefab.tscn" id="4_oven"]
 [ext_resource type="PackedScene" uid="uid://hmlv008dl5oi" path="res://SinkPrefab.tscn" id="5_sink"]
 [ext_resource type="PackedScene" uid="uid://dq61fyb3xwt0w" path="res://PhotoPrefab.tscn" id="6_photo"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="7_door"]
 [ext_resource type="PackedScene" path="res://CabinetPrefab.tscn" id="9_cabinet"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
@@ -202,7 +202,11 @@ cabinet_type = "lower"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.4, -3.75)
 cabinet_type = "lower"
 
-[node name="Doors" type="Node3D" parent="."]
-
-[node name="EntranceDoor" parent="Doors" instance=ExtResource("7_door")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1.18177, 0, 0, -3.79057, -0.215871, 0.0544062)
+[node name="KitchenAmbientAudio" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+stream = ExtResource("1_kitchen_ambient_audio")
+attenuation_model = 1
+volume_db = 1.077
+unit_size = 1.0
+autoplay = true
+max_distance = 40.0

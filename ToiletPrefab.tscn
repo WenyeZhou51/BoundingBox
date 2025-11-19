@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://toilet_prefab_001"]
+
+[ext_resource type="Script" path="res://ToiletPrefab.gd" id="1_toilet"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_toilet_base"]
+size = Vector3(0.6, 0.4, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_toilet_base"]
+size = Vector3(0.6, 0.4, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_toilet"]
+albedo_color = Color(0.95, 0.95, 0.98, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_toilet_tank"]
+size = Vector3(0.5, 0.5, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_toilet_tank"]
+size = Vector3(0.5, 0.5, 0.3)
+
+[node name="ToiletPrefab" type="StaticBody3D"]
+script = ExtResource("1_toilet")
+
+[node name="Base" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_toilet_base")
+
+[node name="BaseMesh" type="MeshInstance3D" parent="Base"]
+mesh = SubResource("BoxMesh_toilet_base")
+surface_material_override/0 = SubResource("StandardMaterial3D_toilet")
+
+[node name="Tank" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -0.25)
+shape = SubResource("BoxShape3D_toilet_tank")
+
+[node name="TankMesh" type="MeshInstance3D" parent="Tank"]
+mesh = SubResource("BoxMesh_toilet_tank")
+surface_material_override/0 = SubResource("StandardMaterial3D_toilet")
+

@@ -213,6 +213,7 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1.18177, 0, 0, -3.79057, -0.215871, 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -2)
 move_speed = 2.5
 detection_range = 50.0
+path_update_interval = 1.0
 
 [node name="NavigationRegion3D2" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_a38p3")

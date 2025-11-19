@@ -17,6 +17,7 @@ func _ready():
 	confidence = 0.88
 	is_interactable = true
 	interaction_text = "Read"
+	is_trash = false
 	
 	super._ready()  # Call parent's _ready function
 	
@@ -129,7 +130,7 @@ func create_ui_elements():
 	content_label.position = Vector2(20, 20)
 	content_label.size = Vector2(460, 220)
 	content_label.bbcode_enabled = true
-	content_label.text = """[color=green][font_size=20][center]NOTE[/center]
+	content_label.text = """[color=green][font_size=20][center]NOTE[/center][/font_size]
 
 [font_size=18]Specimin escaped. 
 

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://tvk14btamhjw"
+path="res://.godot/imported/todolist new.wav-0f00ca440c5d5ce9b1f09ad890ac8cd8.sample"
+
+[deps]
+
+source_file="res://Audio/todolist new.wav"
+dest_files=["res://.godot/imported/todolist new.wav-0f00ca440c5d5ce9b1f09ad890ac8cd8.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

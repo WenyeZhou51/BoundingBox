@@ -1,8 +1,10 @@
-[gd_scene load_steps=27 format=3 uid="uid://dyhw7i2ywupfo"]
+[gd_scene load_steps=29 format=3 uid="uid://dyhw7i2ywupfo"]
 
 [ext_resource type="Script" path="res://PhysicsObjectPrefab.gd" id="2_physics_script"]
 [ext_resource type="Script" path="res://StepPrefab.gd" id="2_step"]
 [ext_resource type="PackedScene" uid="uid://b8x70a02a1b2c" path="res://RailingPrefab.tscn" id="4_railing"]
+[ext_resource type="PackedScene" uid="uid://hmlv008c6cmj" path="res://DollPrefab.tscn" id="5_doll"]
+[ext_resource type="PackedScene" path="res://PillsPrefab.tscn" id="6_pills"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -475,17 +477,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09091, 8.07223, -1.98412)
 [node name="PhysicsObjects" type="Node3D" parent="."]
 
 [node name="PlayerSizedPhysicsObject" type="RigidBody3D" parent="PhysicsObjects"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.56357, -2.51558)
-mass = 20.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.780424, 0.820758, -2.70196)
+mass = 60.0
 script = ExtResource("2_physics_script")
 object_label = "Step"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsObjects/PlayerSizedPhysicsObject"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_physics_object")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsObjects/PlayerSizedPhysicsObject"]
-transform = Transform3D(-0.0019373, 0.999998, 0, -0.999998, -0.0019373, 0, 0, 0, 1, 2.65666, -0.687209, 0.608001)
+transform = Transform3D(-0.0019373, 0.999998, 0, -0.999998, -0.0019373, 0, 0, 0, 1, -1.03712e-05, 0.00248301, 0.00169992)
 mesh = SubResource("CapsuleMesh_physics_object")
 surface_material_override/0 = SubResource("StandardMaterial3D_physics_object")
+
+[node name="Step" parent="PhysicsObjects" instance=ExtResource("5_doll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="Pills" parent="." instance=ExtResource("6_pills")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.437407, 0.985249, -2.30713)
 
 [node name="Doors" type="Node3D" parent="."]

@@ -1,7 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://0p4v1wxu7oqr"]
+[gd_scene load_steps=19 format=3 uid="uid://0p4v1wxu7oqr"]
 
 [ext_resource type="PackedScene" uid="uid://c54l40l50gykk" path="res://DormRoomPrefab.tscn" id="1_dorm_room"]
 [ext_resource type="PackedScene" path="res://KitchenAccessCardPrefab.tscn" id="2_kitchen_card"]
+[ext_resource type="AudioStream" uid="uid://df57gak0bmf6j" path="res://Audio/new ambience.mp3" id="3_6seu0"]
+[ext_resource type="Script" path="res://PhysicsObjectPrefab.gd" id="4_physics_script"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -38,6 +40,17 @@ size = Vector3(5, 4, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wall_segment"]
 size = Vector3(5, 4, 0.2)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_physics_object"]
+radius = 0.3
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_physics_object"]
+radius = 0.3
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_physics_object"]
+albedo_color = Color(0.6, 0.4, 0.3, 1)
 
 [node name="DormHallwayScene" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.89968, 0)
@@ -169,13 +182,23 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wall")
 shape = SubResource("BoxShape3D_wall_segment")
 
 [node name="EndWall" type="StaticBody3D" parent="HallwayStructure"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -15, 2, 0)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -0.395446, 0, 0, -15, 2, -2.2118)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="HallwayStructure/EndWall"]
 mesh = SubResource("BoxMesh_wall_segment")
 surface_material_override/0 = SubResource("StandardMaterial3D_wall")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HallwayStructure/EndWall"]
+shape = SubResource("BoxShape3D_wall_segment")
+
+[node name="EndWall2" type="StaticBody3D" parent="HallwayStructure"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -0.395446, 0, 0, -15, 2, 2.01941)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HallwayStructure/EndWall2"]
+mesh = SubResource("BoxMesh_wall_segment")
+surface_material_override/0 = SubResource("StandardMaterial3D_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HallwayStructure/EndWall2"]
 shape = SubResource("BoxShape3D_wall_segment")
 
 [node name="LeftRooms" type="Node3D" parent="."]
@@ -212,7 +235,30 @@ transform = Transform3D(-1, 0, 1.22465e-16, 0, 1, 0, -1.22465e-16, 0, -1, -2.063
 room_number = "1024"
 occupant_name = "Russell Jensen"
 
+[node name="PhysicsObjects" type="Node3D" parent="RightRooms/Room1024_Russell"]
+
+[node name="PlayerSizedPhysicsObject" type="RigidBody3D" parent="RightRooms/Room1024_Russell/PhysicsObjects"]
+transform = Transform3D(-0.0706793, -0.907056, 0.415034, -1.11361e-16, -0.416075, -0.90933, 0.997499, -0.0642708, 0.0294078, -0.540286, 1, -1.12548)
+mass = 84.775
+script = ExtResource("4_physics_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightRooms/Room1024_Russell/PhysicsObjects/PlayerSizedPhysicsObject"]
+shape = SubResource("CapsuleShape3D_physics_object")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RightRooms/Room1024_Russell/PhysicsObjects/PlayerSizedPhysicsObject"]
+mesh = SubResource("CapsuleMesh_physics_object")
+surface_material_override/0 = SubResource("StandardMaterial3D_physics_object")
+
 [node name="Room1026_Adrianna" parent="RightRooms" instance=ExtResource("1_dorm_room")]
 transform = Transform3D(-1, 0, 1.22465e-16, 0, 1, 0, -1.22465e-16, 0, -1, -8.58786, 0, 5)
 room_number = "1026"
 occupant_name = "Adrianna Wade"
+
+[node name="DormHallwayAmbientAudio" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+stream = ExtResource("3_6seu0")
+attenuation_model = 1
+volume_db = 9.076
+unit_size = 1.0
+autoplay = true
+max_distance = 40.0

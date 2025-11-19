@@ -4,15 +4,30 @@ class_name EnemyPrefab
 ## Enemy AI that chases the player using pathfinding
 ## Only moves horizontally (X, Z axes), maintains Y position with gravity
 
+# ============================================================================
+# PERFORMANCE OPTIMIZATIONS APPLIED:
+# ============================================================================
+# 1. Path Update Interval: Increased from 0.5s to 1.0s
+#    - Reduces pathfinding calculations by 50%
+# 2. Player Movement Tracking: Only update path if player moved >2.0 units
+#    - Eliminates unnecessary path recalculations when player is stationary
+# 3. Combined Optimization: Path updates reduced from 2/sec to ~0.5-1/sec
+#    - Significant reduction in navigation system overhead
+# ============================================================================
+
 @export var move_speed: float = 3.0  # Movement speed (slightly slower than player)
 @export var detection_range: float = 100.0  # How far the enemy can detect the player
-@export var path_update_interval: float = 0.5  # How often to recalculate path (seconds)
+@export var path_update_interval: float = 1.0  # How often to recalculate path (OPTIMIZED: increased from 0.5 to 1.0 seconds)
 
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
 
 var player: CharacterBody3D = null
 var path_update_timer: float = 0.0
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+
+# OPTIMIZATION: Track player position to avoid unnecessary path updates
+var last_player_position: Vector3 = Vector3.ZERO
+var player_move_threshold: float = 2.0  # Only update path if player moved this much
 
 func _ready():
 	# Find the player in the scene
@@ -97,9 +112,21 @@ func _physics_process(delta):
 	move_and_slide()
 
 func update_target_location():
-	# Update the navigation target to the player's current position
+	# OPTIMIZED: Only update if player has moved significantly
 	if player and is_instance_valid(player) and navigation_agent:
-		navigation_agent.target_position = player.global_position
+		var current_player_pos = player.global_position
+		
+		# Check if player moved enough to warrant a path update
+		if last_player_position == Vector3.ZERO:
+			# First update
+			navigation_agent.target_position = current_player_pos
+			last_player_position = current_player_pos
+		else:
+			var distance_moved = current_player_pos.distance_to(last_player_position)
+			if distance_moved > player_move_threshold:
+				navigation_agent.target_position = current_player_pos
+				last_player_position = current_player_pos
+			# else: player hasn't moved enough, skip path update
 
 func _on_navigation_agent_velocity_computed(safe_velocity: Vector3):
 	# This is called by NavigationAgent3D if using velocity-based movement

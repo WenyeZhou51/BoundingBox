@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=3 uid="uid://shower_prefab_001"]
+
+[ext_resource type="Script" path="res://ShowerPrefab.gd" id="1_shower"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shower_base"]
+size = Vector3(1.0, 0.1, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_shower_base"]
+size = Vector3(1.0, 0.1, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shower_base"]
+albedo_color = Color(0.85, 0.85, 0.85, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shower_wall1"]
+size = Vector3(0.05, 2.0, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_shower_wall"]
+size = Vector3(0.05, 2.0, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shower_wall"]
+albedo_color = Color(0.9, 0.9, 0.95, 0.6)
+transparency = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shower_head"]
+size = Vector3(0.15, 0.1, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_shower_head"]
+size = Vector3(0.15, 0.1, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shower_head"]
+albedo_color = Color(0.6, 0.6, 0.7, 1)
+
+[node name="ShowerPrefab" type="StaticBody3D"]
+script = ExtResource("1_shower")
+
+[node name="Base" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+shape = SubResource("BoxShape3D_shower_base")
+
+[node name="BaseMesh" type="MeshInstance3D" parent="Base"]
+mesh = SubResource("BoxMesh_shower_base")
+surface_material_override/0 = SubResource("StandardMaterial3D_shower_base")
+
+[node name="WallLeft" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.475, 1.0, 0)
+shape = SubResource("BoxShape3D_shower_wall1")
+
+[node name="WallLeftMesh" type="MeshInstance3D" parent="WallLeft"]
+mesh = SubResource("BoxMesh_shower_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_shower_wall")
+
+[node name="WallRight" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.475, 1.0, 0)
+shape = SubResource("BoxShape3D_shower_wall1")
+
+[node name="WallRightMesh" type="MeshInstance3D" parent="WallRight"]
+mesh = SubResource("BoxMesh_shower_wall")
+surface_material_override/0 = SubResource("StandardMaterial3D_shower_wall")
+
+[node name="ShowerHead" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1.8, 0.3)
+shape = SubResource("BoxShape3D_shower_head")
+
+[node name="ShowerHeadMesh" type="MeshInstance3D" parent="ShowerHead"]
+mesh = SubResource("BoxMesh_shower_head")
+surface_material_override/0 = SubResource("StandardMaterial3D_shower_head")
+

@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://window_prefab_001"]
+
+[ext_resource type="Script" path="res://WindowPrefab.gd" id="1_window"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_window"]
+size = Vector3(2, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_window"]
+size = Vector3(2, 3, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_window"]
+albedo_color = Color(0.7, 0.85, 1, 0.5)
+transparency = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_window_frame"]
+albedo_color = Color(0.3, 0.25, 0.2, 1)
+
+[node name="WindowPrefab" type="StaticBody3D"]
+script = ExtResource("1_window")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_window")
+
+[node name="WindowPane" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_window")
+surface_material_override/0 = SubResource("StandardMaterial3D_window")

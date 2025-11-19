@@ -128,7 +128,7 @@ func create_ui_elements():
 	content_label.position = Vector2(20, 20)
 	content_label.size = Vector2(560, 320)
 	content_label.bbcode_enabled = true
-	content_label.text = "It\n\nThings are silent outside. I don't know where they went. I am going out to search. If anyone reads this, if anyone is in dire danger, I have a revolver in the safe with my room number as the code.\n\nCasen Patterson"
+	content_label.text = "[color=green][font_size=20]To-do List, Casen Patterson[/font_size]\n\n[font_size=18]Return book to Ernest\nShop for groceries (we are almost out)\nCheck issue with freezer door. (Can sometimes jam.)[/font_size][/color]"
 	content_label.visible = false
 	
 	# Style the text to match game theme (green text on black background)

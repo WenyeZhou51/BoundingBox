@@ -1,0 +1,71 @@
+[gd_scene load_steps=5 format=3 uid="uid://pool_table_prefab"]
+
+[ext_resource type="Script" path="res://PoolTablePrefab.gd" id="1_pool"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pool_table"]
+size = Vector3(2.5, 0.8, 1.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pool_surface"]
+size = Vector3(2.5, 0.1, 1.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pool"]
+albedo_color = Color(0.1, 0.5, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pool_frame"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_frame"]
+albedo_color = Color(0.4, 0.25, 0.15, 1)
+
+[node name="PoolTablePrefab" type="StaticBody3D"]
+script = ExtResource("1_pool")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("BoxShape3D_pool_table")
+
+[node name="Surface" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("BoxMesh_pool_surface")
+surface_material_override/0 = SubResource("StandardMaterial3D_pool")
+
+[node name="Frame1" type="MeshInstance3D" parent="."]
+transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.75)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+
+[node name="Frame2" type="MeshInstance3D" parent="."]
+transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.75)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+
+[node name="Frame3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 15, -1.25, 0.75, 0)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+
+[node name="Frame4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 15, 1.25, 0.75, 0)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+
+[node name="Leg1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 7.5, 0, 0, 0, 1, -1.1, 0.375, -0.65)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+
+[node name="Leg2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 7.5, 0, 0, 0, 1, 1.1, 0.375, -0.65)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+
+[node name="Leg3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 7.5, 0, 0, 0, 1, -1.1, 0.375, 0.65)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+
+[node name="Leg4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 7.5, 0, 0, 0, 1, 1.1, 0.375, 0.65)
+mesh = SubResource("BoxMesh_pool_frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_frame")
+

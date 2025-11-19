@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://room_plate_prefab_001"]
+[gd_scene load_steps=4 format=3 uid="uid://c0np6pqhjghwg"]
 
 [ext_resource type="Script" path="res://RoomPlatePrefab.gd" id="1_room_plate"]
 

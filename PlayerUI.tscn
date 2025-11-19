@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://de7wk7ig1g8pi"]
+[gd_scene load_steps=14 format=3 uid="uid://de7wk7ig1g8pi"]
 
 [ext_resource type="Script" path="res://IntroSequence.gd" id="1_intro"]
 [ext_resource type="AudioStream" uid="uid://b4rdbp8jclhcw" path="res://Audio/Incoming message sound.wav" id="2_incoming_message"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bu1rwlhnbydjd" path="res://KitchenScene.tscn" id="9_kitchen"]
 [ext_resource type="PackedScene" uid="uid://bu1rwlcvu1vjh" path="res://FreezerScene.tscn" id="10_freezer"]
 [ext_resource type="PackedScene" uid="uid://0p4v1wxu7oqr" path="res://DormHallwayScene.tscn" id="11_dorm"]
+[ext_resource type="PackedScene" uid="uid://0lptvy7hrfgk" path="res://RecRoomScene.tscn" id="12_recroom"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
@@ -95,6 +96,9 @@ transform = Transform3D(-0.025828, 0, 0.999666, 0, 1, 0, -0.999666, 0, -0.025828
 
 [node name="FreezerScene" parent="ViewportFrame/SubViewportContainer/SubViewport" instance=ExtResource("10_freezer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.0027, 0.265037, -18.3977)
+
+[node name="RecRoomScene" parent="ViewportFrame/SubViewportContainer/SubViewport" instance=ExtResource("12_recroom")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0.265037, -27.5)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="ViewportFrame/SubViewportContainer/SubViewport"]
 

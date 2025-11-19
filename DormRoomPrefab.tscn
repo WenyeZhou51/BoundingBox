@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://c54l40l50gykk"]
+[gd_scene load_steps=11 format=3 uid="uid://c54l40l50gykk"]
 
+[ext_resource type="AudioStream" uid="uid://df57gak0bmf6j" path="res://Audio/new ambience.mp3" id="1_ambient_audio"]
 [ext_resource type="Script" path="res://DormRoomPrefab.gd" id="1_dorm_room"]
 [ext_resource type="PackedScene" path="res://BedPrefab.tscn" id="2_bed"]
 [ext_resource type="PackedScene" uid="uid://dwxhcb5ygq7jq" path="res://DeskPrefab.tscn" id="3_desk"]
-[ext_resource type="PackedScene" path="res://RoomPlatePrefab.tscn" id="4_room_plate"]
+[ext_resource type="PackedScene" uid="uid://c0np6pqhjghwg" path="res://RoomPlatePrefab.tscn" id="4_room_plate"]
 [ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="5_door"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
@@ -89,3 +90,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31728, 0.283843, 2.19829)
 
 [node name="DoorPrefab" parent="." instance=ExtResource("5_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="DormRoomAmbientAudio" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+stream = ExtResource("1_ambient_audio")
+attenuation_model = 1
+volume_db = 5.0
+unit_size = 1.0
+autoplay = true
+max_distance = 20.0

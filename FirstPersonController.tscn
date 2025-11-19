@@ -7,6 +7,19 @@
 [ext_resource type="AudioStream" uid="uid://b2jgcl1wfhxlc" path="res://Audio/pick up gun sound.mp3" id="5_pickup"]
 [ext_resource type="AudioStream" uid="uid://df57gak0bmf6j" path="res://Audio/new ambience.mp3" id="6_ambient"]
 [ext_resource type="AudioStream" uid="uid://cttwrlnrxiygp" path="res://Audio/Todolist.wav" id="7_todolist"]
+[ext_resource type="AudioStream" path="res://Audio/Ambient sound.wav" id="18_ambient_default"]
+[ext_resource type="AudioStream" path="res://Audio/Freezer amb.wav" id="19_ambient_freezer"]
+[ext_resource type="AudioStream" path="res://Audio/stairway amb.wav" id="20_ambient_stairway"]
+[ext_resource type="AudioStream" path="res://Audio/six pieces left.wav" id="8_6piece"]
+[ext_resource type="AudioStream" path="res://Audio/5 piece left.wav" id="9_5piece"]
+[ext_resource type="AudioStream" path="res://Audio/4 piece left.wav" id="10_4piece"]
+[ext_resource type="AudioStream" path="res://Audio/3 pieces left.wav" id="11_3piece"]
+[ext_resource type="AudioStream" path="res://Audio/2 pieces left.wav" id="12_2piece"]
+[ext_resource type="AudioStream" path="res://Audio/1 piece left.wav" id="13_1piece"]
+[ext_resource type="AudioStream" path="res://Audio/end.wav" id="14_end"]
+[ext_resource type="AudioStream" path="res://Audio/breakfast.wav" id="15_breakfast"]
+[ext_resource type="AudioStream" path="res://Audio/freezer new.wav" id="16_freezer"]
+[ext_resource type="AudioStream" path="res://Audio/rec room.wav" id="17_recroom"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.5
@@ -66,3 +79,55 @@ bus = &"Master"
 [node name="TodolistAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_todolist")
 volume_db = 0.0
+
+[node name="TrashCounter6Audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_6piece")
+volume_db = 0.0
+
+[node name="TrashCounter5Audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_5piece")
+volume_db = 0.0
+
+[node name="TrashCounter4Audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_4piece")
+volume_db = 0.0
+
+[node name="TrashCounter3Audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_3piece")
+volume_db = 0.0
+
+[node name="TrashCounter2Audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_2piece")
+volume_db = 0.0
+
+[node name="TrashCounter1Audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_1piece")
+volume_db = 0.0
+
+[node name="EndAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_end")
+volume_db = 0.0
+
+[node name="BreakfastAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_breakfast")
+volume_db = 0.0
+
+[node name="FreezerAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_freezer")
+volume_db = 0.0
+
+[node name="RecRoomAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("17_recroom")
+volume_db = 0.0
+
+[node name="DefaultAmbientAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("18_ambient_default")
+volume_db = 20.0
+
+[node name="FreezerAmbientAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("19_ambient_freezer")
+volume_db = 10.0
+
+[node name="StairwayAmbientAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("20_ambient_stairway")
+volume_db = 10.0

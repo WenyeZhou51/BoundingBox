@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://chess_table_prefab"]
+
+[ext_resource type="Script" path="res://ChessTablePrefab.gd" id="1_chess"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_chess_table"]
+size = Vector3(1.0, 0.8, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_chess_top"]
+size = Vector3(1.0, 0.05, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chess_top"]
+albedo_color = Color(0.9, 0.9, 0.8, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_chess_leg"]
+size = Vector3(0.08, 0.7, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chess"]
+albedo_color = Color(0.3, 0.2, 0.15, 1)
+
+[node name="ChessTablePrefab" type="StaticBody3D"]
+script = ExtResource("1_chess")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("BoxShape3D_chess_table")
+
+[node name="TableTop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("BoxMesh_chess_top")
+surface_material_override/0 = SubResource("StandardMaterial3D_chess_top")
+
+[node name="Leg1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.35, -0.4)
+mesh = SubResource("BoxMesh_chess_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_chess")
+
+[node name="Leg2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.35, -0.4)
+mesh = SubResource("BoxMesh_chess_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_chess")
+
+[node name="Leg3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.35, 0.4)
+mesh = SubResource("BoxMesh_chess_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_chess")
+
+[node name="Leg4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.35, 0.4)
+mesh = SubResource("BoxMesh_chess_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_chess")
+
