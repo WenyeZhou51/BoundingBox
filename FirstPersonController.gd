@@ -157,7 +157,7 @@ var has_kitchen_access_card: bool = false
 # Trash pickup system
 var held_trash = null  # Currently held trash object
 var trash_hold_offset: Vector3 = Vector3(0.5, -0.3, -1.5)  # Position relative to camera
-var total_trash_left: int = 7  # Global counter for trash that needs to be thrown out
+var total_trash_left: int = 6  # Global counter for trash that needs to be thrown out
 var trash_original_materials: Dictionary = {}  # Store original visibility state for trash objects (optimized - no materials!)
 var study_scene_entered: bool = false  # Flag to track if study scene has been entered
 var freezer_scene_entered: bool = false  # Flag to track if freezer scene has been entered
