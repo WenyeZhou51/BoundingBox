@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" path="res://ShelfPrefab.tscn" id="1_shelf"]
 [ext_resource type="PackedScene" path="res://DebrisPrefab.tscn" id="2_debris"]
 [ext_resource type="PackedScene" uid="uid://bwxm8k7ig2iap" path="res://MirrorPrefab.tscn" id="3_mirror"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="4_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="4_door"]
 [ext_resource type="PackedScene" path="res://KitchenDoorwayPrefab.tscn" id="5_doorway"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]

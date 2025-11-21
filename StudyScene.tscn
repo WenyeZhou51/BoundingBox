@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://ej6pqkyk3els"]
+[gd_scene load_steps=24 format=3 uid="uid://ej6pqkyk3els"]
 
 [ext_resource type="AudioStream" uid="uid://df57gak0bmf6j" path="res://Audio/new ambience.mp3" id="1_ambient_audio"]
 [ext_resource type="PackedScene" uid="uid://dwxhcb5ygq7jq" path="res://DeskPrefab.tscn" id="1_desk"]
@@ -7,7 +7,8 @@
 [ext_resource type="PackedScene" path="res://ShatteredLampPrefab.tscn" id="3_shattered_lamp"]
 [ext_resource type="PackedScene" uid="uid://bx4364163trg8" path="res://JuicePuddlePrefab.tscn" id="6_juice_puddle"]
 [ext_resource type="PackedScene" path="res://WindowPrefab.tscn" id="7_window"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="8_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="8_door"]
+[ext_resource type="PackedScene" uid="uid://bptpqnx6srwjy" path="res://TapedPaperPrefab.tscn" id="9_taped_paper"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -225,6 +226,11 @@ transform = Transform3D(0.999986, 0, 0.00537559, 0, 1, 0, -0.00537559, 0, 0.9999
 [node name="JuicePuddle" parent="Furniture" instance=ExtResource("6_juice_puddle")]
 transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 0.8)
 
+[node name="WallDecor" type="Node3D" parent="."]
+
+[node name="TapedPaper" parent="WallDecor" instance=ExtResource("9_taped_paper")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, -3.89)
+
 [node name="Doors" type="Node3D" parent="."]
 
 [node name="Window" parent="Doors" instance=ExtResource("7_window")]
@@ -257,8 +263,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_physics_object")
 [node name="StudyAmbientAudio" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 stream = ExtResource("1_ambient_audio")
-attenuation_model = 1
-volume_db = 5.0
-unit_size = 1.0
+volume_db = 2.0
+unit_size = 5.0
 autoplay = true
-max_distance = 40.0
+max_distance = 10.0

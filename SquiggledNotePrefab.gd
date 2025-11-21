@@ -129,12 +129,7 @@ func create_ui_elements():
 	content_label.position = Vector2(20, 20)
 	content_label.size = Vector2(560, 320)
 	content_label.bbcode_enabled = true
-	content_label.text = """[color=green][font_size=16]Nowhere I can go, Nowhere I can hide
-They come for me
-The horrors that stalk these blasted halls
-The knocking intensifies, and I but see a glint in the dark
-
-Russel Jensen[/font_size][/color]"""
+	content_label.text = """[color=green][font_size=16]The new pool table is entrancing. I can sit there and watch it play for ages.[/font_size][/color]"""
 	content_label.visible = false
 	
 	# Style the text to match game theme (green text on black background)

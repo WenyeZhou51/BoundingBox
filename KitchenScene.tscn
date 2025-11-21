@@ -205,8 +205,7 @@ cabinet_type = "lower"
 [node name="KitchenAmbientAudio" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 stream = ExtResource("1_kitchen_ambient_audio")
-attenuation_model = 1
-volume_db = 1.077
-unit_size = 1.0
+volume_db = 2.0
+unit_size = 5.0
 autoplay = true
-max_distance = 40.0
+max_distance = 10.0

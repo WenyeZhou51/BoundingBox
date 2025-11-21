@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8tv" path="res://TVPrefab.tscn" id="5_tv"]
 [ext_resource type="PackedScene" uid="uid://dgtbla5ryx60a" path="res://SquiggledNotePrefab.tscn" id="6_squiggled"]
 [ext_resource type="PackedScene" uid="uid://dgtbla5r0oqag" path="res://ThermometerPrefab.tscn" id="7_thermometer"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="8_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="8_door"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -177,8 +177,7 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 0, 0)
 [node name="LivingRoomAmbientAudio" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 stream = ExtResource("1_ambient_audio")
-attenuation_model = 1
-volume_db = 5.0
-unit_size = 1.0
+volume_db = 2.0
+unit_size = 5.0
 autoplay = true
-max_distance = 40.0
+max_distance = 10.0

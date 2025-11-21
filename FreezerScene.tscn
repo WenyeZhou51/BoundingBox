@@ -339,8 +339,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.00652, 0.0912974, 0.328411
 [node name="FreezerAmbientAudio" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 stream = ExtResource("1_freezer_ambient_audio")
-attenuation_model = 1
-volume_db = 5.0
-unit_size = 1.0
+volume_db = 2.0
+unit_size = 5.0
 autoplay = true
-max_distance = 40.0
+max_distance = 10.0

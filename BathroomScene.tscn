@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=3 uid="uid://clrukf7eqy8qw"]
 
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="1_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="1_door"]
 [ext_resource type="PackedScene" path="res://ToiletPrefab.tscn" id="2_toilet"]
 [ext_resource type="PackedScene" uid="uid://hmlv008dl5oi" path="res://SinkPrefab.tscn" id="3_sink"]
 [ext_resource type="PackedScene" path="res://ShelfPrefab.tscn" id="4_shelf"]

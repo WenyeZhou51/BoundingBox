@@ -241,6 +241,7 @@ occupant_name = "Russell Jensen"
 transform = Transform3D(-0.0706793, -0.907056, 0.415034, -1.11361e-16, -0.416075, -0.90933, 0.997499, -0.0642708, 0.0294078, -0.540286, 1, -1.12548)
 mass = 84.775
 script = ExtResource("4_physics_script")
+object_label = "Bedroll"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RightRooms/Room1024_Russell/PhysicsObjects/PlayerSizedPhysicsObject"]
 shape = SubResource("CapsuleShape3D_physics_object")
@@ -257,8 +258,7 @@ occupant_name = "Adrianna Wade"
 [node name="DormHallwayAmbientAudio" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 stream = ExtResource("3_6seu0")
-attenuation_model = 1
-volume_db = 9.076
-unit_size = 1.0
+volume_db = 2.0
+unit_size = 5.0
 autoplay = true
-max_distance = 40.0
+max_distance = 10.0

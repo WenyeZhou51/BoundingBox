@@ -20,6 +20,8 @@
 [ext_resource type="AudioStream" path="res://Audio/breakfast.wav" id="15_breakfast"]
 [ext_resource type="AudioStream" path="res://Audio/freezer new.wav" id="16_freezer"]
 [ext_resource type="AudioStream" path="res://Audio/rec room.wav" id="17_recroom"]
+[ext_resource type="AudioStream" path="res://Audio/End sequence audio.wav" id="21_end_sequence"]
+[ext_resource type="AudioStream" uid="uid://lgqkg5jwwgdy" path="res://Audio/Confirm sound.mp3" id="22_confirm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.5
@@ -131,3 +133,11 @@ volume_db = 10.0
 [node name="StairwayAmbientAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("20_ambient_stairway")
 volume_db = 10.0
+
+[node name="EndSequenceAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("21_end_sequence")
+volume_db = 0.0
+
+[node name="ConfirmSoundAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("22_confirm")
+volume_db = 0.0

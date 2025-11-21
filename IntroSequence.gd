@@ -34,8 +34,8 @@ func _ready():
 	letter_panel.visible = false
 	
 	# Set up the message box
-	message_label.text = "incoming message"
-	
+	message_label.text = "Starting Systems..."
+
 	# Set up the letter content
 	letter_content.text = """[center][color=#00ff00][font_size=18][code]
 ███╗   ███╗    ██╗    ██████╗     ██████╗     ██████╗     ██████╗ 
@@ -65,7 +65,7 @@ func _ready():
 
 [right][i][color=#888888]Professional OCR Solutions Since 2024[/color][/i][/right]
 [/font_size]"""
-	
+
 	# Connect close button
 	close_button.pressed.connect(_on_close_button_pressed)
 	

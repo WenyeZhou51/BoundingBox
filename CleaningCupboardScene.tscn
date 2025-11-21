@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://DetergentPrefab.tscn" id="3_detergent"]
 [ext_resource type="PackedScene" path="res://AccessCardPrefab.tscn" id="4_card"]
 [ext_resource type="PackedScene" path="res://ShelfPrefab.tscn" id="5_shelf"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="6_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="6_door"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 

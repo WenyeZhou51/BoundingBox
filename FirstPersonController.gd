@@ -38,7 +38,7 @@ extends CharacterBody3D
 # EXPECTED TOTAL PERFORMANCE: 80-95% reduction in frame time + lag-free trash pickup
 # ============================================================================
 
-@export var speed: float = 12.5
+@export var speed: float = 4.17
 @export var jump_velocity: float = 2.25
 @export var sensitivity: float = 0.002
 @export var max_detection_distance: float = 50.0
@@ -99,6 +99,8 @@ var pooled_ray_query: PhysicsRayQueryParameters3D = null
 @onready var trash_counter_2_audio: AudioStreamPlayer = $TrashCounter2Audio
 @onready var trash_counter_1_audio: AudioStreamPlayer = $TrashCounter1Audio
 @onready var end_audio: AudioStreamPlayer = $EndAudio
+@onready var end_sequence_audio: AudioStreamPlayer = $EndSequenceAudio
+@onready var confirm_sound_audio: AudioStreamPlayer = $ConfirmSoundAudio
 @onready var breakfast_audio: AudioStreamPlayer = $BreakfastAudio
 @onready var freezer_audio: AudioStreamPlayer = $FreezerAudio
 @onready var rec_room_audio: AudioStreamPlayer = $RecRoomAudio
@@ -919,7 +921,9 @@ func update_or_create_bounding_box_ui(obj, bbox: Rect2, is_interactable_in_range
 			label_text = obj.object_label + ": " + str(round(display_confidence * 100) / 100.0)
 			label_color = Color.BLACK
 		
-		if is_interactable_in_range and obj.interaction_text != "":
+		# Don't show interaction text for red windows (holding trash or one piece left)
+		var is_red_window = obj.object_label == "Window" and (held_trash != null or one_piece_left_active)
+		if is_interactable_in_range and obj.interaction_text != "" and not is_red_window:
 			label_text += " [" + obj.interaction_text + "]"
 	
 	# Check if UI already exists for this object
@@ -2037,7 +2041,64 @@ func decrement_trash_counter():
 			print("All trash has been thrown out!")
 	
 	if total_trash_left <= 0:
-		print("All trash has been thrown out!")
+			print("All trash has been thrown out!")
+
+# Stop all audio sources (called at start of end sequence)
+func stop_all_audio():
+	print("Stopping all audio for end sequence...")
+	
+	# Stop all audio players
+	if footstep_audio and footstep_audio.playing:
+		footstep_audio.stop()
+	if gun_sound_audio and gun_sound_audio.playing:
+		gun_sound_audio.stop()
+	if scare_audio and scare_audio.playing:
+		scare_audio.stop()
+	if pickup_gun_audio and pickup_gun_audio.playing:
+		pickup_gun_audio.stop()
+	if ambient_audio and ambient_audio.playing:
+		ambient_audio.stop()
+	if todolist_audio and todolist_audio.playing:
+		todolist_audio.stop()
+	if trash_counter_6_audio and trash_counter_6_audio.playing:
+		trash_counter_6_audio.stop()
+	if trash_counter_5_audio and trash_counter_5_audio.playing:
+		trash_counter_5_audio.stop()
+	if trash_counter_4_audio and trash_counter_4_audio.playing:
+		trash_counter_4_audio.stop()
+	if trash_counter_3_audio and trash_counter_3_audio.playing:
+		trash_counter_3_audio.stop()
+	if trash_counter_2_audio and trash_counter_2_audio.playing:
+		trash_counter_2_audio.stop()
+	if trash_counter_1_audio and trash_counter_1_audio.playing:
+		trash_counter_1_audio.stop()
+	if breakfast_audio and breakfast_audio.playing:
+		breakfast_audio.stop()
+	if freezer_audio and freezer_audio.playing:
+		freezer_audio.stop()
+	if rec_room_audio and rec_room_audio.playing:
+		rec_room_audio.stop()
+	
+	# Stop current narrative audio if playing
+	if current_narrative_audio and current_narrative_audio.playing:
+		print("Stopping current narrative audio: ", current_narrative_audio.name)
+		current_narrative_audio.stop()
+		current_narrative_audio = null
+	
+	# Stop any ambient audio nodes that might be playing (DefaultAmbientAudio, FreezerAmbientAudio, StairwayAmbientAudio)
+	var default_ambient = get_node_or_null("DefaultAmbientAudio")
+	if default_ambient and default_ambient.playing:
+		default_ambient.stop()
+	
+	var freezer_ambient = get_node_or_null("FreezerAmbientAudio")
+	if freezer_ambient and freezer_ambient.playing:
+		freezer_ambient.stop()
+	
+	var stairway_ambient = get_node_or_null("StairwayAmbientAudio")
+	if stairway_ambient and stairway_ambient.playing:
+		stairway_ambient.stop()
+	
+	print("All audio stopped.")
 
 # Trigger the final end sequence when player clicks window with one piece left
 func trigger_final_end_sequence(window_object):
@@ -2047,25 +2108,13 @@ func trigger_final_end_sequence(window_object):
 	is_executing_final_sequence = true
 	print("Triggering final end sequence!")
 	
+	# STOP ALL AUDIO IMMEDIATELY (ambient, voicelines, footsteps, everything)
+	stop_all_audio()
+	
 	# Disable player input (capture mouse but don't allow movement)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
-	# Get window position
-	var window_center = get_object_center_cached(window_object)
-	var start_pos = global_position
-	var target_pos = window_center + (global_position - window_center).normalized() * 2.0  # Stop 2 units before window
-	
-	# Move player towards window over 2 seconds
-	var move_duration = 2.0
-	var elapsed = 0.0
-	
-	while elapsed < move_duration:
-		elapsed += get_physics_process_delta_time()
-		var t = elapsed / move_duration
-		global_position = start_pos.lerp(target_pos, t)
-		await get_tree().process_frame
-	
-	# Fade to black (make black screen fully opaque)
+	# IMMEDIATELY make screen black
 	if black_screen:
 		black_screen.visible = true
 		black_screen.color = Color.BLACK
@@ -2074,19 +2123,46 @@ func trigger_final_end_sequence(window_object):
 	if bounding_box_container:
 		bounding_box_container.visible = false
 	
-	# Play end audio (use placeholder if not available)
+	# Wait 0.5 seconds
+	await get_tree().create_timer(0.5).timeout
+	
+	# Play "End sequence audio.wav"
+	if end_sequence_audio and end_sequence_audio.stream:
+		end_sequence_audio.play()
+		# Wait for it to finish
+		await end_sequence_audio.finished
+	else:
+		print("No end sequence audio available")
+	
+	# Wait 2 seconds
+	await get_tree().create_timer(2.0).timeout
+	
+	# Play "end.wav"
 	if end_audio and end_audio.stream:
-		play_narrative_audio(end_audio)
-		# Wait for audio to finish
+		end_audio.play()
+		# Wait for it to finish
 		await end_audio.finished
 	else:
-		# Placeholder: wait 3 seconds if no audio
-		print("No end audio available, using placeholder delay")
-		await get_tree().create_timer(3.0).timeout
+		print("No end audio available")
 	
-	# Show ASCII art "Cleaning out the rooms" for 2 seconds
+	# Wait 1.5 seconds
+	await get_tree().create_timer(1.5).timeout
+	
+	# Show ASCII art "Cleaning out the rooms" for 3 seconds with confirm sound
 	show_ascii_art_message()
-	await get_tree().create_timer(2.0).timeout
+	if confirm_sound_audio and confirm_sound_audio.stream:
+		confirm_sound_audio.play()
+	await get_tree().create_timer(3.0).timeout
+	
+	# Hide ASCII art before showing credits
+	if ui_overlay.has_node("AsciiLabel"):
+		ui_overlay.get_node("AsciiLabel").queue_free()
+	
+	# Show "A game by Wenye Zhou" for 3 seconds with confirm sound
+	show_credits_message()
+	if confirm_sound_audio and confirm_sound_audio.stream:
+		confirm_sound_audio.play()
+	await get_tree().create_timer(3.0).timeout
 	
 	# Quit the game
 	print("Quitting game...")
@@ -2096,31 +2172,40 @@ func trigger_final_end_sequence(window_object):
 func show_ascii_art_message():
 	# Create a label for the ASCII art
 	var ascii_label = Label.new()
+	ascii_label.name = "AsciiLabel"
+	# Simpler, more legible ASCII art
 	ascii_label.text = """
- ██████╗██╗     ███████╗ █████╗ ███╗   ██╗██╗███╗   ██╗ ██████╗ 
-██╔════╝██║     ██╔════╝██╔══██╗████╗  ██║██║████╗  ██║██╔════╝ 
-██║     ██║     █████╗  ███████║██╔██╗ ██║██║██╔██╗ ██║██║  ███╗
-██║     ██║     ██╔══╝  ██╔══██║██║╚██╗██║██║██║╚██╗██║██║   ██║
-╚██████╗███████╗███████╗██║  ██║██║ ╚████║██║██║ ╚████║╚██████╔╝
- ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
-																 
- ██████╗ ██╗   ██╗████████╗    ████████╗██╗  ██╗███████╗        
-██╔═══██╗██║   ██║╚══██╔══╝    ╚══██╔══╝██║  ██║██╔════╝        
-██║   ██║██║   ██║   ██║          ██║   ███████║█████╗          
-██║   ██║██║   ██║   ██║          ██║   ██╔══██║██╔══╝          
-╚██████╔╝╚██████╔╝   ██║          ██║   ██║  ██║███████╗        
- ╚═════╝  ╚═════╝    ╚═╝          ╚═╝   ╚═╝  ╚═╝╚══════╝        
-																 
-██████╗  ██████╗  ██████╗ ███╗   ███╗███████╗                   
-██╔══██╗██╔═══██╗██╔═══██╗████╗ ████║██╔════╝                   
-██████╔╝██║   ██║██║   ██║██╔████╔██║███████╗                   
-██╔══██╗██║   ██║██║   ██║██║╚██╔╝██║╚════██║                   
-██║  ██║╚██████╔╝╚██████╔╝██║ ╚═╝ ██║███████║                   
-╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚══════╝                   
+ ██████╗ ██╗     ███████╗ █████╗ ███╗   ██╗██╗███╗   ██╗ ██████╗ 
+██╔════╝ ██║     ██╔════╝██╔══██╗████╗  ██║██║████╗  ██║██╔════╝ 
+██║      ██║     █████╗  ███████║██╔██╗ ██║██║██╔██╗ ██║██║  ███╗
+██║      ██║     ██╔══╝  ██╔══██║██║╚██╗██║██║██║╚██╗██║██║   ██║
+╚██████╗ ███████╗███████╗██║  ██║██║ ╚████║██║██║ ╚████║╚██████╔╝
+ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+																   
+ ██████╗ ██╗   ██╗████████╗                                       
+██╔═══██╗██║   ██║╚══██╔══╝                                       
+██║   ██║██║   ██║   ██║                                          
+██║   ██║██║   ██║   ██║                                          
+╚██████╔╝╚██████╔╝   ██║                                          
+ ╚═════╝  ╚═════╝    ╚═╝                                          
+																   
+████████╗██╗  ██╗███████╗                                         
+╚══██╔══╝██║  ██║██╔════╝                                         
+   ██║   ███████║█████╗                                           
+   ██║   ██╔══██║██╔══╝                                           
+   ██║   ██║  ██║███████╗                                         
+   ╚═╝   ╚═╝  ╚═╝╚══════╝                                         
+																   
+██████╗  ██████╗  ██████╗ ███╗   ███╗███████╗                    
+██╔══██╗██╔═══██╗██╔═══██╗████╗ ████║██╔════╝                    
+██████╔╝██║   ██║██║   ██║██╔████╔██║███████╗                    
+██╔══██╗██║   ██║██║   ██║██║╚██╔╝██║╚════██║                    
+██║  ██║╚██████╔╝╚██████╔╝██║ ╚═╝ ██║███████║                    
+╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚══════╝                    
 """
 	
 	ascii_label.add_theme_color_override("font_color", Color.GREEN)
-	ascii_label.add_theme_font_size_override("font_size", 16)
+	ascii_label.add_theme_font_size_override("font_size", 18)
 	ascii_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ascii_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	
@@ -2136,3 +2221,23 @@ func show_ascii_art_message():
 	ui_overlay.add_child(ascii_label)
 	
 	print("Showing ASCII art: Cleaning out the rooms")
+
+# Show credits message "A game by Wenye Zhou"
+func show_credits_message():
+	# Create a label for the credits
+	var credits_label = Label.new()
+	credits_label.name = "CreditsLabel"
+	credits_label.text = "A game by Wenye Zhou"
+	
+	credits_label.add_theme_color_override("font_color", Color.GREEN)
+	credits_label.add_theme_font_size_override("font_size", 60)
+	credits_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	credits_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	
+	# Make it fill the screen
+	credits_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	
+	# Add to UI overlay
+	ui_overlay.add_child(credits_label)
+	
+	print("Showing credits: A game by Wenye Zhou")

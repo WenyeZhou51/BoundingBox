@@ -13,7 +13,7 @@ func _ready():
 	confidence = 0.95
 	is_interactable = true
 	interaction_text = "OPEN"
-	collision_shape = $CollisionShape3D
+	collision_shape = $StaticBody3D/CollisionShape3D
 	mesh_instance = $DoorPivot/MeshInstance3D  # The mesh is inside the DoorPivot
 	door_open_audio = $DoorOpenAudio
 	

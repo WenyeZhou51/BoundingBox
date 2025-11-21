@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dwxhcb5ygq7jq" path="res://DeskPrefab.tscn" id="4_desk"]
 [ext_resource type="PackedScene" path="res://PoetryMachinePrefab.tscn" id="5_poetry"]
 [ext_resource type="PackedScene" path="res://StuffedAnimalPrefab.tscn" id="6_stuffed"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="7_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="7_door"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -113,7 +113,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wall")
 shape = SubResource("BoxShape3D_wall")
 
 [node name="WallEastLeft" type="StaticBody3D" parent="Room"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 2, -3.25)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1.90217, 0, 0, 5, 2, -1.76479)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallEastLeft"]
 mesh = SubResource("BoxMesh_door_wall")
@@ -133,7 +133,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_wall")
 shape = SubResource("BoxShape3D_door_wall")
 
 [node name="WallWest" type="StaticBody3D" parent="Room"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -0.793607, 0, 0, -5, 2, -0.960568)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1.06747, 0, 0, -5, 2, -0.00406235)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Room/WallWest"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.182132)
@@ -198,8 +198,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 [node name="RecRoomAmbientAudio" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 stream = ExtResource("1_recroom_ambient_audio")
-attenuation_model = 1
-volume_db = 5.0
-unit_size = 1.0
+volume_db = 2.0
+unit_size = 5.0
 autoplay = true
-max_distance = 40.0
+max_distance = 10.0

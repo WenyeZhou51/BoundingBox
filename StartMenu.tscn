@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dk62d1ke0ys8y"]
+
+[ext_resource type="Script" path="res://StartMenu.gd" id="1_start_menu"]
+[ext_resource type="AudioStream" uid="uid://lgqkg5jwwgdy" path="res://Audio/Confirm sound.mp3" id="2_confirm_sound"]
+
+[node name="StartMenu" type="CanvasLayer"]
+script = ExtResource("1_start_menu")
+
+[node name="HoverSoundAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_confirm_sound")

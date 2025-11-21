@@ -218,22 +218,14 @@ func create_ui_elements():
 func get_upper_cabinet_content() -> String:
 	return """[color=green][font_size=20]UPPER CABINET CONTENTS[/font_size]
 
-[font_size=18]Inside the upper cabinet, you find:
-
-• [b]Plates[/b] - A stack of white ceramic plates, neatly arranged
-• [b]Dish Soap[/b] - A bottle of generic dish soap, half empty
-
-The cabinet is clean but sparsely stocked. Everything appears ordinary at first glance.[/font_size][/color]"""
+[font_size=18]A variety of condiments, cups, plates, dishes, organized neatly into a grid. The surface is impeccably clean[/font_size][/color]"""
 
 func get_lower_cabinet_content() -> String:
 	return """[color=green][font_size=20]LOWER CABINET CONTENTS[/font_size]
 
-[font_size=18]Inside the lower cabinet, you find:
+[font_size=18]A variety of condiments, cups, plates, dishes, organized neatly into a grid. The surface is impeccably clean
 
-• [b]Forks[/b] - A small collection of stainless steel forks
-• [b]Knives[/b] - Several kitchen knives, properly stored
-
-Behind the utensils, tucked in the back corner, you notice a small piece of paper. You pull it out:
+Behind the items, tucked in the back corner, you notice a small piece of paper. You pull it out:
 
 [font_size=16]═══════════════════════════════════════════
 

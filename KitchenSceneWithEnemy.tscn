@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://hmlv008dijfl" path="res://OvenPrefab.tscn" id="4_oven"]
 [ext_resource type="PackedScene" uid="uid://hmlv008dl5oi" path="res://SinkPrefab.tscn" id="5_sink"]
 [ext_resource type="PackedScene" uid="uid://dq61fyb3xwt0w" path="res://PhotoPrefab.tscn" id="6_photo"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="7_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="7_door"]
 [ext_resource type="PackedScene" path="res://KitchenPaintingWindowPrefab.tscn" id="8_painting"]
 [ext_resource type="PackedScene" path="res://CabinetPrefab.tscn" id="9_cabinet"]
 [ext_resource type="PackedScene" uid="uid://c4j8kqx6yk8xv" path="res://Player.tscn" id="10_player"]

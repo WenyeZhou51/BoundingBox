@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" path="res://FrozenBoxPrefab.tscn" id="1_box"]
 [ext_resource type="PackedScene" path="res://DebrisPrefab.tscn" id="2_debris"]
 [ext_resource type="PackedScene" path="res://WatchPrefab.tscn" id="3_watch"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="4_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="4_door"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 

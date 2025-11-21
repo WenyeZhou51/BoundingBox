@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://ScrewsPrefab.tscn" id="3_screws"]
 [ext_resource type="PackedScene" uid="uid://dwxhcb5ygq7jq" path="res://DeskPrefab.tscn" id="4_desk"]
 [ext_resource type="PackedScene" path="res://ShelfPrefab.tscn" id="5_shelf"]
-[ext_resource type="PackedScene" uid="uid://bqx8kqy6yk8xv" path="res://DoorPrefab.tscn" id="6_door"]
+[ext_resource type="PackedScene" uid="uid://bhs8b1m320kgi" path="res://DoorPrefab.tscn" id="6_door"]
 [ext_resource type="PackedScene" path="res://GlassPrefab.tscn" id="7_glass"]
 [ext_resource type="Script" path="res://PhysicsObjectPrefab.gd" id="8_rd3jo"]
 
