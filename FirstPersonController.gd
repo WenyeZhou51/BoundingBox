@@ -1287,8 +1287,17 @@ func handle_right_click_interaction():
 		print("No object in right-click interaction range")
 
 # Find the BasePrefab (or BasePrefab-like) parent of a node
+# Prioritizes the immediate hit node if it's a BasePrefab, then walks up the tree
 func find_prefab_parent(node: Node):
-	var current_node = node
+	# First check if the hit node itself is a BasePrefab or BasePrefab-like
+	if node is BasePrefab:
+		return node
+	elif node.get("object_label") != null and node.get("confidence") != null:
+		# Duck-typing: if it has object_label and confidence, treat it like a prefab
+		return node
+	
+	# If not, walk up the tree to find a prefab parent
+	var current_node = node.get_parent()
 	while current_node != null:
 		if current_node is BasePrefab:
 			return current_node
